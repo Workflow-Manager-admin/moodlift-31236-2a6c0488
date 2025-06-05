@@ -19,18 +19,19 @@ import React, { useState, useEffect } from "react";
  // PUBLIC_INTERFACE
 function ProfilePage({
   mood,
-  username: initialUsername = "John Doe",
-  dateOfBirth: initialDOB = "1998-02-28",
-  dailyMoodStatus: initialDailyMood,
+  username: initialUsername = "",
+  dateOfBirth: initialDOB = "",
+  dailyMoodStatus: initialDailyMood = "",
   diaries = [],
   onProfileChange,
   onAddDiaryEntry,
 }) {
   // Controlled fields: internal state for fast UI, propagate up on Save/Update
-  const [username, setUsername] = useState(initialUsername);
+  // Always initialize as empty string or appropriate blank value
+  const [username, setUsername] = useState(initialUsername || "");
   const [editingUsername, setEditingUsername] = useState(false);
 
-  const [dateOfBirth, setDateOfBirth] = useState(initialDOB);
+  const [dateOfBirth, setDateOfBirth] = useState(initialDOB || "");
   const [editingDOB, setEditingDOB] = useState(false);
 
   const [dailyMoodStatus, setDailyMoodStatus] = useState(initialDailyMood || "");
