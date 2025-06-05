@@ -78,9 +78,9 @@ function BottomNavBar({ selectedNav, onSelectNav }) {
           aria-current={selectedNav === item.key ? "page" : undefined}
           tabIndex={0}
           onClick={() => {
-            // Only call onSelectNav if not already selected (optional UX, disables bounce if same)
-            if (onSelectNav && selectedNav !== item.key) onSelectNav(item.key);
-            else if (onSelectNav) onSelectNav(item.key); // allow reselecting for now
+            // Always call onSelectNav so App.js can update page state accordingly.
+            // This ensures DiaryPage renders any time "Write Diary" is selected.
+            if (onSelectNav) onSelectNav(item.key);
           }}
           type="button"
         >
