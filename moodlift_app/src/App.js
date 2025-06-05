@@ -7,6 +7,7 @@ import GifQuoteCard from './components/GifQuoteCard';
 import BottomNavBar from './components/BottomNavBar';
 import './components/BottomNavBar.css';
 import DiaryPage from './components/DiaryPage';
+// NOTE: We'll import ProfilePage dynamically for suspense/lazy loading via require to keep parity with diary
 
 const MOOD_THEMES = {
   happy: {
