@@ -284,9 +284,8 @@ function App() {
           {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
           <div className="scrollable-content">
             <section className="card gif-card">
-              {/* TODO: Replace with GIF/Quote content component */}
-              <h2>GIF or Quote</h2>
-              <div className="placeholder-text">[Motivational or Funny GIF/Quote card]</div>
+              <h2>GIF & Quote</h2>
+              <GifQuoteCard gif={gif} quote={quote} mood={selectedMood} />
             </section>
           </div>
         </div>
