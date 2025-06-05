@@ -9,6 +9,136 @@
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Mood theme transition animation for all themable containers */
+.mood-theme-transition, body.mood-theme-transition {
+  transition:
+    background 0.85s cubic-bezier(.45,1.3,.38,1.01),
+    color 0.7s cubic-bezier(.45,1.3,.38,1.01),
+    border-color 0.6s cubic-bezier(.31,.84,.39,1.11),
+    font-family 0.65s cubic-bezier(.43,1.4,.27,.97) !important;
+  will-change: background, color, font-family, border-color;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background: linear-gradient(120deg, var(--base-dark), var(--primary) 70%, var(--accent) 100%);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  /* Font smoothness is critical for playful fonts */
+  font-display: swap;
+}
+
+[data-mood="happy"] {
+  /* Playful bouncy effect */
+  --nav-glow: 0 0 12px #ffe06666, 0 2px 16px #ffb80044;
+}
+[data-mood="sad"] {
+  --nav-glow: 0 0 12px #5a80ba88, 0 0px 6px #2a83db33;
+}
+[data-mood="excited"] {
+  --nav-glow: 0 0 17px #ff65a355, 0 0 10px #ffd74055;
+}
+[data-mood="calm"] {
+  --nav-glow: 0 0 10px #78d6c699, 0 0 24px #d5edf277;
+}
+[data-mood="energetic"] {
+  --nav-glow: 0 0 14px #ff6b06bb, 0 0 4px #19f36566;
+}
+[data-mood="angry"] {
+  --nav-glow: 0 0 17px #ff393988, 0 0 11px #fd826155;
+}
+[data-mood="chill"] {
+  --nav-glow: 0 0 10px #8de9c388, 0 0 20px #acd8aa44;
+}
+
+/* Animated navbar color shadow based on mood */
+.navbar {
+  background: rgba(20, 20, 50, 0.98);
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  min-height: 44px;
+  color: #fff !important;
+  box-shadow: var(--nav-glow, 0 2px 7px #1a1a2440);
+  transition: box-shadow 0.68s cubic-bezier(.47,1.18,.29,1.03);
+}
+.navbar * {
+  color: #fff !important;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  /* Add a font-size bounce for happy/excited */
+  transition: font-size 0.65s cubic-bezier(.61,1.51,.25,.93), font-family 0.75s cubic-bezier(.55,1.5,.18,.87);
+}
+[data-mood="happy"] .logo, [data-mood="excited"] .logo {
+  font-size: 1.53rem;
+}
+[data-mood="sad"] .logo, [data-mood="calm"] .logo, [data-mood="chill"] .logo {
+  font-size: 1.38rem;
+}
+
+.logo-symbol {
+  color: #fff;
+  font-size: 1.5em;
+  text-shadow: 0 1px 4px rgba(40,55,120,0.23);
+  /* gentle wiggle for excited/happy */
+  animation: logo-bounce 2.16s cubic-bezier(.45,1.51,.51,1.06) infinite alternate;
+}
+
+@keyframes logo-bounce {
+  0%, 100% { transform: translateY(0);}
+  30% { transform: translateY(-2.5px);}
+  60% { transform: translateY(2.5px);}
+}
+
+.theme-bar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  background-color: var(--secondary);
+  color: #fff;
+  border-radius: 20px;
+  padding: 0 12px;
+  height: 28px;
+  font-size: 1rem;
+  gap: 8px;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+  text-shadow: 0 1px 2px rgba(20,20,40,0.08);
+  font-family: inherit !important;
+  transition: background-color 0.35s, color 0.35s, font-family 0.7s cubic-bezier(.4,1.28,.18,.93);
+}
+
+.navbar .container {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: none;
+  transition: background 0.76s cubic-bezier(.43,1.4,.27,.97);
+  font-family: inherit !important;
+}
+
 
 /* Reset & app base structure */
 body {
