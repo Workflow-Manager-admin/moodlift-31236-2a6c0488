@@ -31,7 +31,8 @@ body {
 /* NAVIGATION STYLES */
 .navbar {
   background: rgba(20, 20, 50, 0.98);
-  padding: 16px 0;
+  /* Reduce top/bottom padding for a thinner navbar */
+  padding: 6px 0;
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
@@ -39,7 +40,7 @@ body {
   top: 0;
   width: 100%;
   z-index: 100;
-  min-height: 60px;
+  min-height: 44px;
   color: #fff !important;
 }
 .navbar * {
