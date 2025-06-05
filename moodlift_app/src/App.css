@@ -1,5 +1,8 @@
 :root {
-  --base-light: #00ffff;
+  --primary: #FFB347;
+  --secondary: #6EC6FF;
+  --accent: #FF69B4;
+  --base-light: #6EC6FF;
   --base-dark: #00008b;
   --text-color: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
