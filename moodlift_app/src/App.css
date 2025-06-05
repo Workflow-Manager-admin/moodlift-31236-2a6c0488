@@ -65,25 +65,40 @@ body {
 }
 
 /* Animated navbar color shadow based on mood */
+/* === HEADER/NAVBAR GRID REFACTOR === */
 .navbar {
   background: rgba(20, 20, 50, 0.98);
-  padding: 6px 0;
-  display: flex;
-  align-items: center;
+  padding: 0;
   border-bottom: 1px solid var(--border-color);
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 100;
-  min-height: 44px;
+  min-height: 48px;
   color: #fff !important;
   box-shadow: var(--nav-glow, 0 2px 7px #1a1a2440);
   transition: box-shadow 0.68s cubic-bezier(.47,1.18,.29,1.03);
+  display: block;
 }
 .navbar * {
   color: #fff !important;
 }
 
+/* Grid layout for navbar container */
+.navbar .container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0 24px;
+  max-width: 940px;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 48px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Center logo in grid for cleaner arrangement */
 .logo {
   font-size: 1.4rem;
   font-weight: 700;
@@ -92,8 +107,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 0;
-  margin-bottom: 0;
+  justify-self: start;
+  margin: 0;
   /* Add a font-size bounce for happy/excited */
   transition: font-size 0.65s cubic-bezier(.61,1.51,.25,.93), font-family 0.75s cubic-bezier(.55,1.5,.18,.87);
 }
@@ -111,15 +126,15 @@ body {
   /* gentle wiggle for excited/happy */
   animation: logo-bounce 2.16s cubic-bezier(.45,1.51,.51,1.06) infinite alternate;
 }
-
 @keyframes logo-bounce {
   0%, 100% { transform: translateY(0);}
   30% { transform: translateY(-2.5px);}
   60% { transform: translateY(2.5px);}
 }
 
+/* Theme bar placed at end of grid layout */
 .theme-bar {
-  margin-left: auto;
+  justify-self: end;
   display: flex;
   align-items: center;
   background-color: var(--secondary);
@@ -135,10 +150,39 @@ body {
   transition: background-color 0.35s, color 0.35s, font-family 0.7s cubic-bezier(.4,1.28,.18,.93);
 }
 
-.navbar .container {
-  padding-top: 0;
-  padding-bottom: 0;
+/* Ensure center grid cell remains available for future nav/expansion */
+.navbar .nav-spacer {
+  grid-column: 2/3;
 }
+
+/* Responsive: Single column stack for tiny screens */
+@media (max-width: 600px) {
+  .navbar .container {
+    grid-template-columns: 1fr auto;
+    gap: 0 10px;
+  }
+  .logo {
+    font-size: 1.13rem;
+    justify-self: start;
+  }
+  .theme-bar {
+    font-size: 0.92rem;
+    height: 22px;
+    padding: 0 7px;
+  }
+}
+
+/* Re-tune original .navbar padding/min-height for mobile screens */
+@media (max-width: 520px) {
+  .navbar {
+    min-height: 32px;
+    padding: 0;
+  }
+  .navbar .container {
+    min-height: 32px;
+  }
+}
+
 
 .app {
   min-height: 100vh;
