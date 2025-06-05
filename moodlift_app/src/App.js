@@ -148,6 +148,34 @@ function App() {
     return Promise.resolve(moodJokes[mood] || { setup: "Feeling moody?", punchline: "Laughter is the best medicine!" });
   }
 
+  // GIF: Static GIF URLs -- in production, these would come from Tenor/Giphy/etc
+  function fetchGifForMood(mood) {
+    const moodGifs = {
+      happy:   { url: "https://media.giphy.com/media/l0HlOvJ7yaacpuSas/giphy.gif", alt: "Happy dancing", isVideo: false },
+      sad:     { url: "https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif", alt: "Sad rain", isVideo: false },
+      excited: { url: "https://media.giphy.com/media/13gvXfEVlxQjDO/giphy.gif", alt: "Excited jump", isVideo: false },
+      calm:    { url: "https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif", alt: "Calm waves", isVideo: false },
+      energetic: { url: "https://media.giphy.com/media/Is9lf7wJJSdwI/giphy.gif", alt: "Energetic dancing", isVideo: false },
+      angry:   { url: "https://media.giphy.com/media/xT9IgIc0lryrxvqVGM/giphy.gif", alt: "Angry outburst", isVideo: false },
+      chill:   { url: "https://media.giphy.com/media/3orieVCbNmAv2jP1Tm/giphy.gif", alt: "Chill relax", isVideo: false },
+    };
+    return Promise.resolve(moodGifs[mood] || { url: "https://media.giphy.com/media/3ohfF54JqgFH7ZRZQA/giphy.gif", alt: "Motivational gif", isVideo: false });
+  }
+
+  // Quote: Static motivational/funny quotes
+  function fetchQuoteForMood(mood) {
+    const moodQuotes = {
+      happy:   { text: "Happiness is not out there, it's in you.", author: "Unknown" },
+      sad:     { text: "Stars can't shine without darkness.", author: "D. M. Dellinger" },
+      excited: { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+      calm:    { text: "Calm mind brings inner strength and self-confidence.", author: "Dalai Lama" },
+      energetic: { text: "The energy of the mind is the essence of life.", author: "Aristotle" },
+      angry:   { text: "For every minute you are angry you lose sixty seconds of happiness.", author: "Ralph Waldo Emerson" },
+      chill:   { text: "Keep your mind cool and your mood chill.", author: "Unknown" },
+    };
+    return Promise.resolve(moodQuotes[mood] || { text: "When nothing goes right, go left.", author: "Unknown" });
+  }
+
   // Side effect: update CSS variables and font when selectedMood changes
   useEffect(() => {
     const theme = selectedMood ? (MOOD_THEMES[selectedMood] || FALLBACK_THEME) : FALLBACK_THEME;
@@ -183,12 +211,16 @@ function App() {
   // Fetch meme and joke when selectedMood changes
   useEffect(() => {
     if (selectedMood) {
-      // parallel "API" call
+      // parallel "API" call: meme, joke, gif, quote
       fetchMemeForMood(selectedMood).then(setMeme);
       fetchJokeForMood(selectedMood).then(setJoke);
+      fetchGifForMood(selectedMood).then(setGif);
+      fetchQuoteForMood(selectedMood).then(setQuote);
     } else {
       setMeme(null);
       setJoke(null);
+      setGif(null);
+      setQuote(null);
     }
   }, [selectedMood]);
 
