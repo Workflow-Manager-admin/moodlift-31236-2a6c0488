@@ -191,17 +191,48 @@ body {
   justify-self: end;
   display: flex;
   align-items: center;
-  background-color: var(--secondary);
+  background: linear-gradient(99deg, var(--secondary) 30%, var(--accent) 100%);
   color: #fff;
-  border-radius: 20px;
-  padding: 0 12px;
-  height: 28px;
-  font-size: 1rem;
-  gap: 8px;
-  box-shadow: 0 2px 7px rgba(0,0,0,0.07);
-  text-shadow: 0 1px 2px rgba(20,20,40,0.08);
+  border-radius: 20px 20px 22px 20px;
+  padding: 0 14px 0 13px;
+  height: 30px;
+  font-size: 1.08rem;
+  gap: 10px;
+  box-shadow:
+    0 3px 11px 0 var(--accent, #FF69B4bb),
+    0 1.5px 7px 0 rgba(30,44,80,0.13);
+  text-shadow: 0 2px 8px var(--primary, #FFB34766);
   font-family: inherit !important;
-  transition: background-color 0.35s, color 0.35s, font-family 0.7s cubic-bezier(.4,1.28,.18,.93);
+  position: relative;
+  transition:
+    background 0.35s cubic-bezier(.33,1.18,.41,.91),
+    color 0.35s,
+    box-shadow 0.54s cubic-bezier(.41,1.08,.21,.93),
+    font-family 0.7s cubic-bezier(.4,1.28,.18,.93);
+  border: 2.4px solid var(--primary);
+}
+/* Playful pulse right accent dot */
+.theme-bar::after {
+  content: "";
+  display: inline-block;
+  margin-left: 11px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, var(--accent) 65%, var(--primary) 100%);
+  box-shadow: 0 0 11px 4px var(--accent, #FF69B4aa);
+  animation: themebar-dot-pulse 1.8s cubic-bezier(.48,1.45,.37,.94) infinite alternate;
+  vertical-align: middle;
+  position: absolute;
+  right: -15px;
+  top: 7px;
+  opacity: 0.82;
+  z-index: 1;
+}
+@keyframes themebar-dot-pulse {
+  0%   { transform: scale(0.92);}
+  51%  { transform: scale(1.18);}
+  100% { transform: scale(0.97);}
 }
 
 /* Ensure center grid cell remains available for future nav/expansion */
