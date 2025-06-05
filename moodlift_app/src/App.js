@@ -461,7 +461,7 @@ function App() {
       <nav className="navbar">
         <div className="container">
           <div className="logo">
-            <span className="logo-symbol">*</span> MoodLift
+            <span className="logo-symbol" role="img" aria-label="Sparkle">✨</span> MoodLift
           </div>
           {/* Optionally a spacer here in grid for future nav elements, or expansion */}
           <div className="theme-bar" title={selectedMood ? `Current Mood: ${moodLabel}` : "Theme Bar"}>
