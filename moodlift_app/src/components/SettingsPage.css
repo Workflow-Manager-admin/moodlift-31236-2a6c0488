@@ -95,13 +95,16 @@
   border-radius: 16px;
   box-shadow: 0 2px 19px 0 var(--secondary, #6ec6ff18), 0 5px 12px 0 var(--primary, #ffb34711);
   padding: 20px 24px 14px 24px;
-  margin-bottom: 17px;
-  width: 90%;
-  max-width: 440px;
+  width: 100%;
+  max-width: 500px;
+  min-width: 270px;
+  margin: 0 auto;
   animation: cardFloat 1.3s cubic-bezier(.34,1.52,.29,1.08);
   transition: background 0.7s, box-shadow 0.5s;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
 @keyframes cardFloat {
   0% { transform: translateY(16px) scale(0.98); opacity: 0.4;}
