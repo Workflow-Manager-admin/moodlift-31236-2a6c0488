@@ -358,34 +358,32 @@ function App() {
       />
     );
   } else if (currentPage === "profile") {
-    // Compose all profile data from state
+    // Move handler definitions outside of IIFE to prevent loss of reference and real-time state update
+    // PUBLIC_INTERFACE
+    const handleProfileChange = useCallback(({ username, dateOfBirth, dailyMoodStatus }) => {
+      setProfile(prev => ({
+        ...prev,
+        username: username !== undefined ? username : prev.username,
+        dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : prev.dateOfBirth
+      }));
+      if (dailyMoodStatus !== undefined) {
+        setSelectedMood(dailyMoodStatus);
+      }
+    }, []);
+
+    // PUBLIC_INTERFACE
+    const handleAddDiaryEntry = useCallback(({ date, mood, text }) => {
+      setDiaries(prev => [
+        { date, mood, text },
+        ...prev
+      ]);
+    }, []);
+
     pageContent = (
       <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
         {
           (() => {
             const ProfilePage = require("./components/ProfilePage").default;
-
-            // Handler for profile field changes (username, dob, dailyMoodStatus)
-            const handleProfileChange = ({ username, dateOfBirth, dailyMoodStatus }) => {
-              setProfile(prev => ({
-                ...prev,
-                username: username !== undefined ? username : prev.username,
-                dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : prev.dateOfBirth
-              }));
-              // dailyMoodStatus is not part of profile object in App.js, but can be used to set selectedMood
-              if (dailyMoodStatus !== undefined) {
-                setSelectedMood(dailyMoodStatus);
-              }
-            };
-
-            // Handler for adding a diary entry from profile
-            const handleAddDiaryEntry = ({ date, mood, text }) => {
-              setDiaries(prev => [
-                { date, mood, text },
-                ...prev
-              ]);
-            };
-
             return (
               <ProfilePage
                 mood={selectedMood}
