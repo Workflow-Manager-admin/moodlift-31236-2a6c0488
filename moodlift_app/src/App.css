@@ -115,6 +115,7 @@ body {
   transition: box-shadow 0.22s cubic-bezier(.3,.11,.32,.91);
   position: relative;
   overflow: hidden;
+  color: #fff;
 }
 
 .card h2 {
