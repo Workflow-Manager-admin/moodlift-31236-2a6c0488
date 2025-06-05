@@ -8,6 +8,7 @@ import BottomNavBar from './components/BottomNavBar';
 import './components/BottomNavBar.css';
 import DiaryPage from './components/DiaryPage';
 // NOTE: We'll import ProfilePage dynamically for suspense/lazy loading via require to keep parity with diary
+import SettingsPage from './components/SettingsPage';
 
 const MOOD_THEMES = {
   happy: {
@@ -127,7 +128,8 @@ function App() {
   const [joke, setJoke] = useState(null); // joke object
   const [gif, setGif] = useState(null); // gif object
   const [quote, setQuote] = useState(null); // quote object
-  const [currentPage, setCurrentPage] = useState("main"); // "main" | "diary"
+  // Updated: now supports "main" | "diary" | "profile" | "settings"
+  const [currentPage, setCurrentPage] = useState("main");
   const prevMood = useRef(null);
 
   // --- MOCK APIs (stubbed) ---
@@ -255,7 +257,7 @@ function App() {
   // Callback for navigation change from bottom nav bar
   // PUBLIC_INTERFACE
   const handleSelectNav = (navKey) => {
-    // Navigation handler fully supports profile, main (home), and diary
+    // Navigation handler fully supports profile, main (home), diary, and settings
     switch (navKey) {
       case "profile":
         setCurrentPage("profile");
@@ -263,12 +265,14 @@ function App() {
       case "write":
         setCurrentPage("diary");
         break;
+      case "settings":
+        setCurrentPage("settings");
+        break;
       case "home":
       default:
         setCurrentPage("main");
         break;
     }
-    // Future nav keys such as "settings" can be added here
   };
 
   // Handler after diary entry save (stub - can be hooked to an API)
