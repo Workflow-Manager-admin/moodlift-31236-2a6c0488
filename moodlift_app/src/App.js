@@ -243,28 +243,28 @@ function App() {
     return Promise.resolve(moodQuotes[mood] || { text: "When nothing goes right, go left.", author: "Unknown" });
   }
 
-  // Side effect: update CSS variables and font when selectedMood changes
+  // Side effect: update CSS variables and font when selectedMood or color overrides change
   useEffect(() => {
     const theme = selectedMood ? (MOOD_THEMES[selectedMood] || FALLBACK_THEME) : FALLBACK_THEME;
+
+    // Always apply color override (from user), EVEN if mood changes
+    applyThemeVars(theme, themeColorOverride);
 
     // Animate color/theme transitions on body
     document.body.classList.add('mood-theme-transition');
     setTimeout(() => document.body.classList.remove('mood-theme-transition'), 850);
 
-    // 1. Set body's background (mood-based, does not override with custom)
+    // Set body's background for the current mood (never overridden by custom color)
     document.body.style.background = theme.bodyBg;
 
-    // 2. Set theme CSS vars, including color overrides from settings
-    applyThemeVars(theme, themeColorOverride);
-
-    // 3. Animate font family
+    // Animate font family
     document.body.style.fontFamily = theme.fontFamily;
 
-    // 4. Dynamically load playful web font
+    // Dynamically load playful web font
     const familyToLoad = (theme.fontFamily?.split(',')[0] || '').replace(/'/g, '').trim();
     loadWebFont(familyToLoad);
 
-    // 5. Animate all .card, .navbar, .logo etc. on theme change for smooth transition
+    // Animate all .card, .navbar, .logo, etc. for smooth transition
     const themables = document.querySelectorAll('.card, .navbar, .logo, .theme-bar, .main-content, .mood-selector-card, .meme-bar, .joke-bar, .meme-card, .gif-card');
     themables.forEach(el => {
       el.classList.add('mood-theme-transition');
