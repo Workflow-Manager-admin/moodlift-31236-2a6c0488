@@ -254,12 +254,20 @@ function App() {
   // Callback for navigation change from bottom nav bar
   // PUBLIC_INTERFACE
   const handleSelectNav = (navKey) => {
-    // Always switch navigation state based on BottomNavBar selection
-    if (navKey === "write") setCurrentPage("diary");
-    else if (navKey === "home") setCurrentPage("main");
-    else if (navKey === "profile") setCurrentPage("profile");
-    // ...extend for future navs like profile/settings
-    // Unknown navKeys are safely ignored
+    // Navigation handler fully supports profile, main (home), and diary
+    switch (navKey) {
+      case "profile":
+        setCurrentPage("profile");
+        break;
+      case "write":
+        setCurrentPage("diary");
+        break;
+      case "home":
+      default:
+        setCurrentPage("main");
+        break;
+    }
+    // Future nav keys such as "settings" can be added here
   };
 
   // Handler after diary entry save (stub - can be hooked to an API)
@@ -331,10 +339,9 @@ function App() {
         />
       )}
       {currentPage === "profile" && (
-        // ProfilePage expects mood prop for adaptive theming
+        // Render ProfilePage (imported directly) and pass selectedMood as mood prop for full theming support
         <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
           {
-            // Lazy load ProfilePage if desired; here, direct import
             (() => {
               const ProfilePage = require("./components/ProfilePage").default;
               return <ProfilePage mood={selectedMood} />;
