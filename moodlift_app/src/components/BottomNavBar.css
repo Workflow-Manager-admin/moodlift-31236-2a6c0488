@@ -1,0 +1,94 @@
+.bottom-nav-bar {
+  position: fixed;
+  left: 0; bottom: 0;
+  width: 100vw;
+  z-index: 123;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(90deg, var(--base-dark, #00008b), var(--primary, #ffb347) 70%, var(--accent, #ff69b4) 100%);
+  border-top: 2px solid var(--border-color, #fff3);
+  box-shadow: 0 -3px 24px 0 rgba(20,20,50,0.15), 0px -2.5px 14px 0 var(--primary, #ffb347, 0.15);
+  min-height: 60px;
+  padding: 0 0 env(safe-area-inset-bottom, 0);
+  transition: background 0.65s, box-shadow 0.34s;
+  animation: bottomBarPop 0.5s cubic-bezier(.32,1.43,.27,1.09);
+}
+
+@keyframes bottomBarPop {
+  0%   { opacity: 0; transform: translateY(32px) scale(0.94);}
+  94%  { opacity: 1; transform: translateY(-3px) scale(1.04);}
+  100% { opacity: 1; transform: translateY(0) scale(1);}
+}
+
+.bnv-action {
+  background: none;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 7px 0 4px;
+  flex: 1 0 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color, #fff);
+  cursor: pointer;
+  transition: color 0.20s, background 0.13s, box-shadow 0.17s, font-family 0.5s;
+  font-family: inherit;
+  font-size: 0.97em;
+  border-radius: 9px 9px 0 0;
+}
+.bnv-action:active,
+.bnv-action:focus,
+.bnv-action:hover {
+  background: linear-gradient(94deg, var(--accent, #ff69b4) 23%, var(--primary, #ffb347) 99%);
+  color: var(--base-dark, #10003b);
+  box-shadow: 0 0 13px 0 var(--accent, #FF69B4, 0.09);
+}
+.bnv-selected {
+  color: var(--base-dark, #1A1A1A);
+  background: linear-gradient(91deg, var(--primary, #ffb347) 66%, var(--accent, #ff69b4) 92%);
+  box-shadow: 0 0 15px 0 var(--secondary, #6ec6ff, 0.12);
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.bnv-icon svg {
+  vertical-align: middle;
+  filter: drop-shadow(0 2px 8px rgba(50,30,120,0.19));
+}
+
+.bnv-label {
+  display: block;
+  font-size: 0.98em;
+  font-weight: 500;
+  margin-top: 2px;
+  font-family: inherit;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1.5px 5px rgba(40,20,80,0.09);
+}
+
+@media (max-width: 700px) {
+  .bottom-nav-bar {
+    min-height: 54px;
+  }
+  .bnv-label {
+    font-size: 0.93em;
+    margin-top: 0px;
+  }
+}
+@media (max-width: 480px) {
+  .bottom-nav-bar {
+    min-height: 44px;
+    padding: 0;
+  }
+  .bnv-action {
+    font-size: 0.92em;
+    padding: 4px 0 1px;
+  }
+  .bnv-label {
+    display: none;
+  }
+}

@@ -4,6 +4,8 @@ import MoodSelector from './components/MoodSelector';
 import './components/MoodSelector.css';
 import MemeJokeCard from './components/MemeJokeCard';
 import GifQuoteCard from './components/GifQuoteCard';
+import BottomNavBar from './components/BottomNavBar';
+import './components/BottomNavBar.css';
 
 const MOOD_THEMES = {
   happy: {
@@ -291,6 +293,10 @@ function App() {
         </div>
       </main>
       {/* Optionally, add a fixed theming bar or footer here in the future */}
+      <BottomNavBar
+        selectedNav={null}
+        onSelectNav={() => {}}
+      />
     </div>
   );
 }
