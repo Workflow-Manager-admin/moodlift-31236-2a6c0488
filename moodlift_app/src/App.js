@@ -30,21 +30,25 @@ function App() {
             <div className="placeholder-text">[Mood selection controls go here]</div>
           </section>
 
-          {/* Scrollable section: Meme/Joke Cards, GIF/Quote Cards */}
+          {/* --- Meme Bar Section --- */}
+          <section className="card meme-bar">
+            <h2>Meme Bar</h2>
+            <div className="placeholder-text">[Scrolling memes will appear here]</div>
+          </section>
+
+          {/* --- Joke Bar Section --- */}
+          <section className="card joke-bar">
+            <h2>Joke Bar</h2>
+            <div className="placeholder-text">[Scrolling jokes will appear here]</div>
+          </section>
+
+          {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
           <div className="scrollable-content">
-
-            <section className="card meme-card">
-              {/* TODO: Replace with Meme/Joke content component */}
-              <h2>Meme or Joke</h2>
-              <div className="placeholder-text">[Meme or Joke content card]</div>
-            </section>
-
             <section className="card gif-card">
               {/* TODO: Replace with GIF/Quote content component */}
               <h2>GIF or Quote</h2>
               <div className="placeholder-text">[Motivational or Funny GIF/Quote card]</div>
             </section>
-
           </div>
         </div>
       </main>
