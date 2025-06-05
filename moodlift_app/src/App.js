@@ -242,21 +242,20 @@ function App() {
     document.body.classList.add('mood-theme-transition');
     setTimeout(() => document.body.classList.remove('mood-theme-transition'), 850);
 
-    // Set body's bg and variable theme colors
+    // 1. Set body's background (mood-based, does not override with custom)
     document.body.style.background = theme.bodyBg;
-    for (const key of Object.keys(FALLBACK_THEME)) {
-      if (key.startsWith('--')) {
-        document.documentElement.style.setProperty(key, theme[key]);
-      }
-    }
-    // Animate font family on root
+
+    // 2. Set theme CSS vars, including color overrides from settings
+    applyThemeVars(theme, themeColorOverride);
+
+    // 3. Animate font family
     document.body.style.fontFamily = theme.fontFamily;
 
-    // Dynamically load playful web font
+    // 4. Dynamically load playful web font
     const familyToLoad = (theme.fontFamily?.split(',')[0] || '').replace(/'/g, '').trim();
     loadWebFont(familyToLoad);
 
-    // Also animate all .card, .navbar, .logo etc. on mood change for smooth theme
+    // 5. Animate all .card, .navbar, .logo etc. on theme change for smooth transition
     const themables = document.querySelectorAll('.card, .navbar, .logo, .theme-bar, .main-content, .mood-selector-card, .meme-bar, .joke-bar, .meme-card, .gif-card');
     themables.forEach(el => {
       el.classList.add('mood-theme-transition');
@@ -264,7 +263,7 @@ function App() {
     });
 
     prevMood.current = selectedMood;
-  }, [selectedMood]);
+  }, [selectedMood, themeColorOverride]);
 
   // Fetch meme and joke when selectedMood changes
   useEffect(() => {
