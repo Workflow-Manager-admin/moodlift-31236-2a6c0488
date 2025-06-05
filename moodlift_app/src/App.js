@@ -273,12 +273,74 @@ function App() {
 
   // Handler after diary entry save (stub - can be hooked to an API)
   const handleDiarySave = ({ mood, text }) => {
-    // Optionally show a toast, or add to main feed
-    // For now: just close diary screen and maybe reset nav
     setCurrentPage("main");
   };
-  // Handler to return from Diary page to main
   const handleDiaryBack = () => setCurrentPage("main");
+
+  /**
+   * Conditional rendering for main, diary, and profile pages:
+   * - When "profile" is selected in the BottomNavBar, ProfilePage is shown and receives 'mood' as prop for theming.
+   * - "main" and "diary" behave as before.
+   */
+  let pageContent = null;
+  if (currentPage === "main") {
+    pageContent = (
+      <main className="main-content">
+        <div className="container flex-col gap-lg">
+          {/* Mood Selector Section */}
+          <section className="card mood-selector-card">
+            <h2>Mood Selector</h2>
+            <MoodSelector
+              selectedMood={selectedMood}
+              onMoodChange={handleMoodChange}
+              // In the future, pass AI/auto detection handler here
+            />
+          </section>
+
+          {/* --- Meme Bar Section --- */}
+          <section className="card meme-bar">
+            <h2>Meme Bar</h2>
+            <MemeJokeCard type="meme" meme={meme} mood={selectedMood} />
+          </section>
+
+          {/* --- Joke Bar Section --- */}
+          <section className="card joke-bar">
+            <h2>Joke Bar</h2>
+            <MemeJokeCard type="joke" joke={joke} mood={selectedMood} />
+          </section>
+
+          {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
+          <div className="scrollable-content">
+            <section className="card gif-card">
+              <h2>GIF & Quote</h2>
+              <GifQuoteCard gif={gif} quote={quote} mood={selectedMood} />
+            </section>
+          </div>
+        </div>
+      </main>
+    );
+  } else if (currentPage === "diary") {
+    pageContent = (
+      <DiaryPage
+        mood={selectedMood}
+        onSave={handleDiarySave}
+        onBack={handleDiaryBack}
+      />
+    );
+  } else if (currentPage === "profile") {
+    // Use Suspense for ProfilePage for illustration (assuming it could eventually be lazily loaded)
+    pageContent = (
+      <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
+        {
+          (() => {
+            const ProfilePage = require("./components/ProfilePage").default;
+            // Pass selectedMood as 'mood' prop for dynamic theming
+            return <ProfilePage mood={selectedMood} />;
+          })()
+        }
+      </React.Suspense>
+    );
+  }
 
   return (
     <div className="app" data-mood={selectedMood || "default"}>
@@ -296,61 +358,8 @@ function App() {
       </nav>
 
       {/* Page content */}
-      {currentPage === "main" && (
-        <main className="main-content">
-          <div className="container flex-col gap-lg">
-            {/* Mood Selector Section */}
-            <section className="card mood-selector-card">
-              <h2>Mood Selector</h2>
-              <MoodSelector
-                selectedMood={selectedMood}
-                onMoodChange={handleMoodChange}
-                // In the future, pass AI/auto detection handler here
-              />
-            </section>
-
-            {/* --- Meme Bar Section --- */}
-            <section className="card meme-bar">
-              <h2>Meme Bar</h2>
-              <MemeJokeCard type="meme" meme={meme} mood={selectedMood} />
-            </section>
-
-            {/* --- Joke Bar Section --- */}
-            <section className="card joke-bar">
-              <h2>Joke Bar</h2>
-              <MemeJokeCard type="joke" joke={joke} mood={selectedMood} />
-            </section>
-
-            {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
-            <div className="scrollable-content">
-              <section className="card gif-card">
-                <h2>GIF & Quote</h2>
-                <GifQuoteCard gif={gif} quote={quote} mood={selectedMood} />
-              </section>
-            </div>
-          </div>
-        </main>
-      )}
-      {currentPage === "diary" && (
-        <DiaryPage
-          // Always pass the real-time mood to DiaryPage
-          mood={selectedMood}
-          onSave={handleDiarySave}
-          onBack={handleDiaryBack}
-        />
-      )}
-      {currentPage === "profile" && (
-        // Render ProfilePage (imported directly) and pass selectedMood as mood prop for full theming support
-        <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
-          {
-            (() => {
-              const ProfilePage = require("./components/ProfilePage").default;
-              return <ProfilePage mood={selectedMood} />;
-            })()
-          }
-        </React.Suspense>
-      )}
-      {/* Optionally, add a fixed theming bar or footer here in the future */}
+      {pageContent}
+      {/* Fixed Bottom Navigation */}
       <BottomNavBar
         selectedNav={
           currentPage === "diary"
