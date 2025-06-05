@@ -88,6 +88,11 @@ body {
   position: relative;
 }
 
+/* Add extra spacing above the MoodSelector card for better separation from header/navbar */
+.mood-selector-card {
+  margin-top: 40px; /* Added: increases vertical gap from navbar/header */
+}
+
 /* Section spacing utility */
 .flex-col {
   display: flex;
