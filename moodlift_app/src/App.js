@@ -377,27 +377,6 @@ function App() {
       />
     );
   } else if (currentPage === "profile") {
-    // Move handler definitions outside of IIFE to prevent loss of reference and real-time state update
-    // PUBLIC_INTERFACE
-    const handleProfileChange = useCallback(({ username, dateOfBirth, dailyMoodStatus }) => {
-      setProfile(prev => ({
-        ...prev,
-        username: username !== undefined ? username : prev.username,
-        dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : prev.dateOfBirth
-      }));
-      if (dailyMoodStatus !== undefined) {
-        setSelectedMood(dailyMoodStatus);
-      }
-    }, []);
-
-    // PUBLIC_INTERFACE
-    const handleAddDiaryEntry = useCallback(({ date, mood, text }) => {
-      setDiaries(prev => [
-        { date, mood, text },
-        ...prev
-      ]);
-    }, []);
-
     pageContent = (
       <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
         {
