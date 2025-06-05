@@ -177,9 +177,20 @@ function App() {
     prevMood.current = selectedMood;
   }, [selectedMood]);
 
+  // Fetch meme and joke when selectedMood changes
+  useEffect(() => {
+    if (selectedMood) {
+      // parallel "API" call
+      fetchMemeForMood(selectedMood).then(setMeme);
+      fetchJokeForMood(selectedMood).then(setJoke);
+    } else {
+      setMeme(null);
+      setJoke(null);
+    }
+  }, [selectedMood]);
+
   const handleMoodChange = useCallback((moodKey) => {
     setSelectedMood(moodKey);
-    // TODO: Use this to trigger mood-specific content fetch
   }, []);
 
   // Helper for showing pretty mood name for nav
@@ -226,13 +237,13 @@ function App() {
           {/* --- Meme Bar Section --- */}
           <section className="card meme-bar">
             <h2>Meme Bar</h2>
-            <div className="placeholder-text">[Scrolling memes will appear here]</div>
+            <MemeJokeCard type="meme" meme={meme} mood={selectedMood} />
           </section>
 
           {/* --- Joke Bar Section --- */}
           <section className="card joke-bar">
             <h2>Joke Bar</h2>
-            <div className="placeholder-text">[Scrolling jokes will appear here]</div>
+            <MemeJokeCard type="joke" joke={joke} mood={selectedMood} />
           </section>
 
           {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
