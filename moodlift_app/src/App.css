@@ -90,7 +90,7 @@ body {
 
 /* Add extra spacing above the MoodSelector card for better separation from header/navbar */
 .mood-selector-card {
-  margin-top: 40px; /* Added: increases vertical gap from navbar/header */
+  margin-top: 80px; /* Increased: substantially more space from navbar/header for improved distinction */
 }
 
 /* Section spacing utility */
