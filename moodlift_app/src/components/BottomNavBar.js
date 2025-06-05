@@ -75,10 +75,12 @@ function BottomNavBar({ selectedNav, onSelectNav }) {
           key={item.key}
           className={`bnv-action${selectedNav === item.key ? " bnv-selected" : ""}`}
           aria-label={item.label}
-          aria-current={selectedNav === item.key}
+          aria-current={selectedNav === item.key ? "page" : undefined}
           tabIndex={0}
           onClick={() => {
-            if (onSelectNav) onSelectNav(item.key);
+            // Only call onSelectNav if not already selected (optional UX, disables bounce if same)
+            if (onSelectNav && selectedNav !== item.key) onSelectNav(item.key);
+            else if (onSelectNav) onSelectNav(item.key); // allow reselecting for now
           }}
           type="button"
         >
