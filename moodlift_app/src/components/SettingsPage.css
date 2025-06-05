@@ -281,11 +281,39 @@
 }
 
 @media (max-width: 720px) {
-  .settings-main-card { max-width: 96vw; width: 99%; }
-  .settings-option-row { padding: 10px 4px; }
+  .settings-main-card {
+    max-width: 96vw;
+    min-width: 0;
+    width: 99vw;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .settings-option-row {
+    padding: 10px 4px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .settings-fullscreen {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
+
 @media (max-width: 520px) {
   .settings-header { flex-direction: column; }
-  .settings-title   { font-size: 1.13rem;}
-  .settings-main-card { padding: 10px 2vw; }
+  .settings-title { font-size: 1.13rem;}
+  .settings-main-card {
+    padding: 10px 2vw;
+    max-width: 100vw;
+    width: 99vw;
+    min-width: 0;
+    border-radius: 10px;
+    margin: 0 auto;
+  }
+  .settings-fullscreen {
+    padding: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+  }
 }
