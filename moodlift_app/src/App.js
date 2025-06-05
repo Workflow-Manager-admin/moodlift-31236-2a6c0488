@@ -122,7 +122,27 @@ function loadWebFont(family, weights = ['400', '700']) {
     - Settings ("settings")
   and passes state and moods as needed.
 */
-// PUBLIC_INTERFACE
+/**
+ * App-wide helper: set theme CSS variables on document.documentElement and body.
+ * Accepts a theme object (from MOOD_THEMES or FALLBACK_THEME) and optional colorOverride.
+ */
+function applyThemeVars(theme, colorOverride = {}) {
+  // Set theme colors from MOOD_THEMES for this mood or fallback, and respect colorOverride if present.
+  for (const key of Object.keys(theme)) {
+    if (key.startsWith("--")) {
+      // If colorOverride provided for this var, use it, else base theme.
+      const value = (
+        (key === "--primary" && colorOverride.primary) ? colorOverride.primary :
+        (key === "--secondary" && colorOverride.secondary) ? colorOverride.secondary :
+        (key === "--accent" && colorOverride.accent) ? colorOverride.accent :
+        theme[key]
+      );
+      document.documentElement.style.setProperty(key, value);
+    }
+  }
+}
+
+ // PUBLIC_INTERFACE
 function App() {
   // Track the selected mood for the session (future: persist or send to backend if needed)
   const [selectedMood, setSelectedMood] = useState(null);
@@ -133,6 +153,29 @@ function App() {
   // Now supports "main" | "diary" | "profile" | "settings"
   const [currentPage, setCurrentPage] = useState("main");
   const prevMood = useRef(null);
+
+  // New: app-level override color handling for SettingsPage-driven changes
+  // { primary, secondary, accent }
+  const [themeColorOverride, setThemeColorOverride] = useState({
+    primary: null,
+    secondary: null,
+    accent: null
+  });
+
+  // Handler to receive color changes from SettingsPage and trigger app-wide theme update
+  // PUBLIC_INTERFACE
+  const handleThemeColorChange = useCallback((colors) => {
+    setThemeColorOverride(prev => ({
+      ...prev,
+      ...colors,
+    }));
+    // Set CSS variables immediately (so SettingsPage preview is not delayed)
+    const theme = selectedMood ? (MOOD_THEMES[selectedMood] || FALLBACK_THEME) : FALLBACK_THEME;
+    applyThemeVars(theme, { ...themeColorOverride, ...colors });
+    // Animate transition
+    document.body.classList.add("mood-theme-transition");
+    setTimeout(() => document.body.classList.remove("mood-theme-transition"), 850);
+  }, [selectedMood, themeColorOverride]);
 
   // --- MOCK APIs (stubbed) ---
   // In production, replace with real fetches (and error handling)
