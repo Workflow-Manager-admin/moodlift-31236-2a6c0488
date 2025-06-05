@@ -358,6 +358,7 @@ function App() {
           <div className="logo">
             <span className="logo-symbol">*</span> MoodLift
           </div>
+          {/* Optionally a spacer here in grid for future nav elements, or expansion */}
           <div className="theme-bar" title={selectedMood ? `Current Mood: ${moodLabel}` : "Theme Bar"}>
             <span role="img" aria-label="theme">🎨</span>
             {selectedMood ? <>Mood: <b style={{ marginLeft: 3 }}>{moodLabel}</b></> : "Theme Bar"}
