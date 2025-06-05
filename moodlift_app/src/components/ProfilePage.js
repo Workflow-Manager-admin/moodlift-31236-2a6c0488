@@ -328,7 +328,7 @@ function ProfilePage({
             <select
               style={{
                 fontWeight: 700,
-                color: "var(--primary)",
+                color: dailyMoodStatus ? "var(--primary)" : "#bbb",
                 background: "rgba(255,255,255,0.13)",
                 border: "1.5px solid var(--primary)",
                 borderRadius: 8,
@@ -350,7 +350,9 @@ function ProfilePage({
                 }
               }}
             >
-              <option value="" disabled>Select mood</option>
+              <option value="" disabled>
+                Select your mood for today
+              </option>
               {moodOptions.map(m =>
                 <option key={m.key} value={m.key}>{m.emoji} {m.label}</option>
               )}
