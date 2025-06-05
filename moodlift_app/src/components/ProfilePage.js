@@ -1,37 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 /**
- * ProfilePage – User profile display with username, date of birth, birthday wishes, mood status, and diary list.
- * Receives:
- *   - mood: string | null (current theme/mood)
- *   - username: string (user's name)
- *   - dateOfBirth: string (ISO date format, e.g. "1999-01-22")
- *   - dailyMoodStatus: string ("happy", "sad", etc.)
- *   - diaries: array of entries: [{date, mood, text}]
+ * ProfilePage (Refactored)
+ * - All profile fields are now editable in-place: username (text), date of birth (date picker), mood status (select), new diary entry (textarea)
+ * - Directly adds new diary entries through input at the top.
+ * - All changes propagate via the onProfileChange and onAddDiaryEntry props for state lifting.
+ * - Mood-based theming is preserved for all elements.
+ *
+ * Props:
+ *   mood (string | null): current mood for theming
+ *   username (string): initial username, controlled
+ *   dateOfBirth (string): initial DOB (ISO), controlled
+ *   dailyMoodStatus (string): current mood, controlled
+ *   diaries (array): list of diary entries [{date, mood, text}]
+ *   onProfileChange (function): fires when username, dob, or mood status is changed ({ username, dateOfBirth, dailyMoodStatus })
+ *   onAddDiaryEntry (function): adds new diary entry ({ date, mood, text }) (date auto today)
  */
-// PUBLIC_INTERFACE
+ // PUBLIC_INTERFACE
 function ProfilePage({
   mood,
-  username = "John Doe",
-  dateOfBirth = "1998-02-28",
-  dailyMoodStatus,
-  diaries = []
+  username: initialUsername = "John Doe",
+  dateOfBirth: initialDOB = "1998-02-28",
+  dailyMoodStatus: initialDailyMood,
+  diaries = [],
+  onProfileChange,
+  onAddDiaryEntry,
 }) {
-  // Mood visual meta
+  // Controlled fields: internal state for fast UI, propagate up on Save/Update
+  const [username, setUsername] = useState(initialUsername);
+  const [editingUsername, setEditingUsername] = useState(false);
+
+  const [dateOfBirth, setDateOfBirth] = useState(initialDOB);
+  const [editingDOB, setEditingDOB] = useState(false);
+
+  const [dailyMoodStatus, setDailyMoodStatus] = useState(initialDailyMood || "");
+  const [diaryText, setDiaryText] = useState("");
+  const [addingDiary, setAddingDiary] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Moods for mood selector
+  const moodOptions = [
+    { key: "happy", label: "Happy", emoji: "😄" },
+    { key: "sad", label: "Sad", emoji: "😢" },
+    { key: "excited", label: "Excited", emoji: "🤩" },
+    { key: "calm", label: "Calm", emoji: "🧘" },
+    { key: "energetic", label: "Energetic", emoji: "⚡" },
+    { key: "angry", label: "Angry", emoji: "😡" },
+    { key: "chill", label: "Chill", emoji: "🧊" },
+  ];
+
+  // Mood meta for avatar/vibe lines
   const moodMeta = {
     happy:     { emoji: "😄", vibe: "Ready to smile!" },
     sad:       { emoji: "😢", vibe: "Gentle mood" },
     excited:   { emoji: "🤩", vibe: "Buzzing with energy!" },
     calm:      { emoji: "🧘", vibe: "Peaceful mind" },
-    energetic: { emoji: "⚡", vibe: "You’re on fire!" },
+    energetic: { emoji: "⚡",  vibe: "You’re on fire!" },
     angry:     { emoji: "😡", vibe: "Let it out!" },
     chill:     { emoji: "🧊", vibe: "Chillin’" },
     default:   { emoji: "🙂", vibe: "Welcome aboard!" }
   };
-  const mainMood = (dailyMoodStatus && moodMeta[dailyMoodStatus]) ? dailyMoodStatus : (mood && moodMeta[mood]) ? mood : null;
+  const mainMood = (
+    (dailyMoodStatus && moodMeta[dailyMoodStatus])
+      ? dailyMoodStatus
+      : (mood && moodMeta[mood])
+        ? mood
+        : null
+  );
   const mm = moodMeta[mainMood] || moodMeta[mood] || moodMeta.default;
 
-  // Helpers
+  // Sync from parent when navigating away => back: controlled updates (rarely needed if ProfilePage lives continuously)
+  useEffect(() => { setUsername(initialUsername); }, [initialUsername]);
+  useEffect(() => { setDateOfBirth(initialDOB); }, [initialDOB]);
+  useEffect(() => { setDailyMoodStatus(initialDailyMood || ""); }, [initialDailyMood]);
+
   function getPrettyDate(dobStr) {
     if (!dobStr) return "";
     const d = new Date(dobStr);
@@ -62,14 +104,46 @@ function ProfilePage({
     return `${m.emoji} ${moodKey.charAt(0).toUpperCase()}${moodKey.slice(1)}`;
   }
 
-  // Theming for main section and cards leverages App.css mood variables via CSS vars.
+  // Save updated username/dob/mood - lift state up
+  function handleProfileSave(field) {
+    if (onProfileChange) {
+      onProfileChange({
+        username,
+        dateOfBirth,
+        dailyMoodStatus,
+      });
+    }
+    // turn off editors
+    if (field === "username") setEditingUsername(false);
+    if (field === "dob") setEditingDOB(false);
+  }
+
+  // Add new diary entry
+  function handleAddDiary() {
+    if (!diaryText.trim() || !dailyMoodStatus) return;
+    const todayIso = new Date().toISOString().slice(0, 10);
+    if (onAddDiaryEntry) {
+      onAddDiaryEntry({
+        date: todayIso,
+        mood: dailyMoodStatus,
+        text: diaryText,
+      });
+    }
+    setDiaryText("");
+    setAddingDiary(false);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 1000);
+  }
+
+  // Theming is handled via CSS vars
+
   return (
     <div className="container flex-col gap-lg" style={{ marginTop: 90, marginBottom: 85 }}>
       {/* Profile Main Card */}
       <section
         className="card"
         style={{
-          minHeight: 260,
+          minHeight: 270,
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
@@ -101,41 +175,131 @@ function ProfilePage({
         >
           {mm.emoji}
         </div>
-        {/* User Info + DOB */}
-        <div
-          style={{
-            fontSize: "1.41em",
-            fontWeight: 700,
-            marginBottom: 3,
-            color: "var(--text-color, #fff)",
-            letterSpacing: "0.01em",
-            textAlign: "center"
-          }}
-        >
-          {username}
-        </div>
-        <div
-          style={{
-            color: "var(--text-secondary, #fff9)",
-            fontSize: "1.05em",
-            marginBottom: 0,
-            marginTop: -2,
-            textAlign: "center"
-          }}
-        >
-          Date of Birth: {getPrettyDate(dateOfBirth)}
-          {"  "}
-          {getAge(dateOfBirth) !== null && (
-            <span style={{ opacity: 0.82, marginLeft: 10 }}>({getAge(dateOfBirth)} yrs)</span>
+
+        {/* Username (editable) */}
+        <div style={{
+          fontSize: "1.33em",
+          minHeight: "1.7em",
+          fontWeight: 700,
+          marginBottom: 2,
+          color: "var(--text-color, #fff)",
+          letterSpacing: "0.01em",
+          textAlign: "center"
+        }}>
+          {editingUsername ? (
+            <span>
+              <input
+                type="text"
+                value={username}
+                autoFocus
+                onChange={e => setUsername(e.target.value)}
+                style={{
+                  fontWeight: 700,
+                  fontSize: "1.07em",
+                  borderRadius: 8,
+                  padding: "3px 7px",
+                  border: "1.4px solid var(--primary)",
+                  outline: "none",
+                  background: "rgba(255,255,255,.15)",
+                  color: "var(--text-color, #fff)",
+                  marginRight: 5
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") handleProfileSave("username");
+                  if (e.key === "Escape") setEditingUsername(false);
+                }}
+              />
+              <button
+                className="btn"
+                style={{padding: "3px 9px", fontSize: "1em"}}
+                onClick={() => handleProfileSave("username")}
+                aria-label="Save username">💾</button>
+              <button
+                className="btn"
+                style={{padding:"3px 8px", fontSize:"1em"}}
+                onClick={() => { setUsername(initialUsername); setEditingUsername(false); }}>✖</button>
+            </span>
+          ) : (
+            <>
+              {username}
+              <button
+                className="btn"
+                type="button"
+                style={{ fontSize: "0.99em", marginLeft: 10, padding: "3px 10px"}}
+                onClick={() => setEditingUsername(true)}
+                aria-label="Edit username"
+                title="Edit username"
+              >✏️</button>
+            </>
           )}
         </div>
-        {/* Birthday Wish */}
+
+        {/* Date of Birth (editable date picker) */}
+        <div style={{
+          color: "var(--text-secondary, #fff9)",
+          fontSize: "1.05em",
+          marginBottom: 0,
+          marginTop: -2,
+          textAlign: "center"
+        }}>
+          Date of Birth:&nbsp;
+          {editingDOB ? (
+            <>
+              <input
+                type="date"
+                value={dateOfBirth}
+                autoFocus
+                onChange={e => setDateOfBirth(e.target.value)}
+                style={{
+                  fontWeight: 500,
+                  fontSize: "1em",
+                  borderRadius: 8,
+                  padding: "3px 7px",
+                  border: "1.2px solid var(--primary)",
+                  outline: "none",
+                  background: "rgba(255,255,255,.14)",
+                  color: "var(--text-color, #fff)",
+                  marginRight: 9
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") handleProfileSave("dob");
+                  if (e.key === "Escape") setEditingDOB(false);
+                }}
+              />
+              <button
+                className="btn"
+                style={{padding: "3px 7px", fontSize:"1em"}}
+                onClick={() => handleProfileSave("dob")}
+                aria-label="Save DOB">💾</button>
+              <button
+                className="btn"
+                style={{padding:"3px 8px", fontSize:"1em"}}
+                onClick={() => { setDateOfBirth(initialDOB); setEditingDOB(false); }}>✖</button>
+            </>
+          ) : (
+            <>
+              {getPrettyDate(dateOfBirth)}
+              {getAge(dateOfBirth) !== null && (
+                <span style={{ opacity: 0.82, marginLeft: 10 }}>({getAge(dateOfBirth)} yrs)</span>
+              )}
+              <button
+                className="btn"
+                style={{fontSize:"0.97em", marginLeft:7, padding:"3px 9px"}}
+                onClick={() => setEditingDOB(true)}
+                aria-label="Edit date of birth"
+                title="Edit date of birth"
+              >✏️</button>
+            </>
+          )}
+        </div>
+
+        {/* Birthday wish */}
         {isBirthdayToday(dateOfBirth) && (
           <div style={{
             color: "var(--accent, #FFB800)",
             fontWeight: 600,
             marginTop: 7,
-            fontSize: "1.13em",
+            fontSize: "1.12em",
             letterSpacing: "0.02em",
             textShadow: "0 2px 8px rgba(255,216,99,0.11)"
           }}>
@@ -143,22 +307,53 @@ function ProfilePage({
           </div>
         )}
 
-        {/* Daily Mood Status */}
+        {/* Daily Mood Status (select) */}
         <div
           style={{
-            margin: "18px 0 9px 0",
+            margin: "20px 0 5px 0",
             color: "var(--text-color, #fff)",
             fontWeight: 600,
             fontSize: "1.13em",
-            textAlign: "center"
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          Today's Mood:{" "}
-          <b style={{ fontWeight: 700, color: "var(--primary)", letterSpacing: 0.01 }}>
-            {dailyMoodStatus ? moodLabelString(dailyMoodStatus) : "Not Set"}
-          </b>
+          Today's Mood:&nbsp;
+          <span>
+            <select
+              style={{
+                fontWeight: 700,
+                color: "var(--primary)",
+                background: "rgba(255,255,255,0.13)",
+                border: "1.5px solid var(--primary)",
+                borderRadius: 8,
+                fontSize: "1.07em",
+                padding: "2.5px 11px",
+                marginRight: 7,
+                marginLeft: 5,
+                transition: "color 0.7s, font-family 0.7s"
+              }}
+              value={dailyMoodStatus || ""}
+              onChange={e => {
+                setDailyMoodStatus(e.target.value);
+                if (onProfileChange) {
+                  onProfileChange({
+                    username,
+                    dateOfBirth,
+                    dailyMoodStatus: e.target.value
+                  });
+                }
+              }}
+            >
+              <option value="" disabled>Select mood</option>
+              {moodOptions.map(m =>
+                <option key={m.key} value={m.key}>{m.emoji} {m.label}</option>
+              )}
+            </select>
+          </span>
         </div>
-        {/* Current Vibe Line */}
         <div
           style={{
             color: "var(--text-secondary, #fff8)",
@@ -168,15 +363,82 @@ function ProfilePage({
             textShadow: "0 1px 6px rgba(20,20,40,0.12)"
           }}
         >
-          {mm.vibe}
+          {dailyMoodStatus ? (moodMeta[dailyMoodStatus]?.vibe || "Vibin'!") : mm.vibe}
         </div>
       </section>
-      {/* Diaries List */}
+
+      {/* Add Diary Entry */}
+      <section
+        className="card"
+        style={{
+          marginTop: 6,
+          marginBottom: 4,
+          background: "rgba(255,255,255,0.17)",
+          borderLeft: "7px solid var(--secondary)",
+          boxShadow: "0 2px 14px 0 rgba(21,70,120,0.10)",
+          minHeight: 80,
+          fontFamily: "inherit"
+        }}
+      >
+        <h2 style={{
+          fontWeight: 700,
+          fontSize: "1.14em",
+          color: "var(--secondary, #6EC6FF)",
+          letterSpacing: 0.02,
+          marginBottom: 8,
+          marginTop: 4
+        }}>
+          Add a New Diary Entry
+        </h2>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 7 }}>
+          <textarea
+            style={{
+              resize: "vertical",
+              width: "98%",
+              minHeight: 44,
+              borderRadius: 9,
+              fontFamily: "inherit",
+              fontSize: "1.09em",
+              padding: "7px",
+              border: "1.2px solid var(--border-color, #edc)",
+              marginBottom: 5,
+              background: "rgba(255,255,255,0.12)",
+              color: "var(--text-color, #fff)",
+              outline: "none",
+              boxShadow: "0 1px 4px 0 rgba(60,60,120,0.08)",
+              transition: "border-color 0.19s, box-shadow 0.19s, color 0.5s, font-family 0.65s"
+            }}
+            placeholder="Write something about your day..."
+            aria-label="Add diary entry"
+            value={diaryText}
+            onChange={e => setDiaryText(e.target.value)}
+            onFocus={() => setAddingDiary(true)}
+            onBlur={() => setAddingDiary(false)}
+            disabled={!dailyMoodStatus}
+          />
+          <div style={{ display: 'flex', gap: 10, alignItems: "center" }}>
+            <button
+              className="btn"
+              type="button"
+              style={{ minWidth: 84, marginLeft: 0 }}
+              disabled={!diaryText.trim() || !dailyMoodStatus}
+              onClick={handleAddDiary}
+            >
+              {saveSuccess ? "Saved!" : "Add Entry"}
+            </button>
+            <span style={{ fontSize: '0.97em', color: "var(--accent, #FF69B4)", opacity: 0.8, marginLeft: 4 }}>
+              {addingDiary && !dailyMoodStatus && "Select mood above to add diary entry!"}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Diary List */}
       <section
         className="card"
         style={{
           marginTop: 4,
-          background: "rgba(255,255,255,0.18)",
+          background: "rgba(255,255,255,0.19)",
           borderLeft: "7px solid var(--secondary)",
           boxShadow: "0 2px 14px 0 rgba(21,70,120,0.10)",
           minHeight: 110,
@@ -201,8 +463,8 @@ function ProfilePage({
         <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
           {diaries && diaries.map((entry, idx) => {
             const entryDate = new Date(entry.date);
-            const prettyDate = isNaN(entryDate) 
-              ? entry.date 
+            const prettyDate = isNaN(entryDate)
+              ? entry.date
               : entryDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
             return (
               <div
@@ -219,9 +481,9 @@ function ProfilePage({
                 }}
               >
                 <span style={{
-                  fontWeight: 600, 
-                  color: "var(--accent)", 
-                  fontSize: "1.01em", 
+                  fontWeight: 600,
+                  color: "var(--accent)",
+                  fontSize: "1.01em",
                   marginRight: 7,
                   opacity: 0.95,
                   letterSpacing: 0.01
