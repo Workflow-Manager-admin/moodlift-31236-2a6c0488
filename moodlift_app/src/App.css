@@ -1,3 +1,13 @@
+/* 
+  MoodLift Theming Styles – Mood-driven adaptive UI
+
+  :: For maintainers ::
+  - App.js modifies root CSS variables and body background on mood selection.
+  - Each mood can define its own --primary, --secondary, --accent, --base-light, --base-dark, --text-color, --border-color and playful font via JS theme map.
+  - Font family is also transitioned for section cards, navbar, and headings.
+  - Add new moods by updating both MOOD_THEMES in App.js and here as needed.
+*/
+
 :root {
   --primary: #FFB347;
   --secondary: #6EC6FF;
