@@ -378,11 +378,13 @@ function App() {
         {
           (() => {
             const ProfilePage = require("./components/ProfilePage").default;
+            // Pass only `selectedMood` as 'dailyMoodStatus' to sync with Home in real-time.
             return (
               <ProfilePage
                 mood={selectedMood}
                 username={profile.username}
                 dateOfBirth={profile.dateOfBirth}
+                // Always use selectedMood as source of dailyMoodStatus for sync
                 dailyMoodStatus={selectedMood}
                 diaries={diaries}
                 onProfileChange={handleProfileChange}
