@@ -64,11 +64,9 @@ body {
   --nav-glow: 0 0 10px #8de9c388, 0 0 20px #acd8aa44;
 }
 
-/* Animated navbar color shadow based on mood */
-/* === HEADER/NAVBAR GRID REFACTOR === */
-/* == Vibrant, animated navbar styles == */
+/* === VIBRANT HEADER/NAVBAR ENHANCEMENTS === */
 .navbar {
-  /* Gradient background with animated shimmering stripes */
+  /* Animated gradient, shimmer, vibrant borders and shadows */
   background: linear-gradient(
     120deg,
     rgba(38,28,90,0.99) 0%,
@@ -100,7 +98,6 @@ body {
   display: block;
   overflow: visible;
 }
-
 @keyframes navbar-bg-animate {
   0% {
     background-position: 0% 72%;
@@ -112,16 +109,13 @@ body {
     background-position: 33% 100%;
   }
 }
-
 .navbar * {
   color: #fff !important;
-  /* Add playful glowing text for accent icons/brand */
   text-shadow:
     0 2px 12px var(--primary, #FFB34761),
     0 1px 7px var(--accent, #FF69B461);
 }
 
-/* Grid layout for navbar container */
 .navbar .container {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -133,18 +127,36 @@ body {
   min-height: 54px;
   margin: 0 auto;
   width: 100%;
-  /* Vibrant animated border: */
   border-radius: 0 0 25px 25px;
   box-shadow:
     0 6px 32px -8px var(--primary, #FFB3477b),
     0 4px 18px 0 var(--accent, #FF69B488);
-  /* Animated accent highlight under navbar on scroll */
   position: relative;
-  /* Shifting highlight overlay for vibe */
   overflow: visible;
 }
 
-/* Center logo in grid for cleaner arrangement */
+/* Animated overlay shine at top of navbar */
+.navbar::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 7px;
+  z-index: 1;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.22) 0%,
+    var(--accent, #FF69B4) 24%,
+    rgba(255,255,255,0.09) 83%,
+    var(--primary, #FFB347) 100%);
+  opacity: 0.32;
+  pointer-events: none;
+  animation: navbar-shine-move 4.8s cubic-bezier(.16,1.41,.41,.81) infinite alternate;
+}
+@keyframes navbar-shine-move {
+  0% { background-position-x: 0%;}
+  100% { background-position-x: 82vw;}
+}
+
+/* Center logo in grid for cleaner arrangement & vibrance */
 .logo {
   font-size: 1.42rem;
   font-weight: 800;
@@ -155,7 +167,6 @@ body {
   gap: 12px;
   justify-self: start;
   margin: 0;
-  /* Font bounce for playful mood */
   transition:
     font-size 0.65s cubic-bezier(.61,1.51,.25,.93),
     font-family 0.75s cubic-bezier(.55,1.5,.18,.87),
@@ -163,11 +174,17 @@ body {
   position: relative;
   z-index: 2;
 }
+[data-mood="happy"] .logo, [data-mood="excited"] .logo {
+  font-size: 1.53rem;
+}
+[data-mood="sad"] .logo, [data-mood="calm"] .logo, [data-mood="chill"] .logo {
+  font-size: 1.38rem;
+}
+
 .logo-symbol {
   color: #ffe167;
   font-size: 1.63em;
   text-shadow: 0 1px 8px rgba(255,216,120,.59), 0 0px 12px var(--accent, #FF69B4cc);
-  /* Sparkle & bounce */
   animation:
     logo-bounce 2.16s cubic-bezier(.45,1.51,.51,1.06) infinite alternate,
     star-sparkle 1.77s cubic-bezier(.63,1.51,.65,1.06) infinite alternate;
@@ -186,7 +203,7 @@ body {
   100% { filter: drop-shadow(0 0 4px #ffe8b1bb); opacity: 0.92;}
 }
 
-/* Theme bar placed at end of grid layout */
+/* Theme bar tuned for a vibrant playfulness */
 .theme-bar {
   justify-self: end;
   display: flex;
@@ -211,7 +228,7 @@ body {
     font-family 0.7s cubic-bezier(.4,1.28,.18,.93);
   border: 2.4px solid var(--primary);
 }
-/* Playful pulse right accent dot */
+
 .theme-bar::after {
   content: "";
   display: inline-block;
@@ -235,7 +252,6 @@ body {
   100% { transform: scale(0.97);}
 }
 
-/* Ensure center grid cell remains available for future nav/expansion */
 .navbar .nav-spacer {
   grid-column: 2/3;
 }
@@ -270,6 +286,9 @@ body {
   }
 }
 
+/* === END NAVBAR VIBRANCE ZONE === */
+
+/* Remaining app styles are not altered below! -------- */
 
 .app {
   min-height: 100vh;
@@ -281,7 +300,6 @@ body {
 }
 
 
-/* Reset & app base structure */
 body {
   margin: 0;
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -301,55 +319,19 @@ body {
 
 /* NAVIGATION STYLES */
 .navbar {
-  background: rgba(20, 20, 50, 0.98);
-  /* Reduce top/bottom padding for a thinner navbar */
-  padding: 6px 0;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  min-height: 44px;
-  color: #fff !important;
-}
-.navbar * {
-  color: #fff !important;
+  /* Already declared above - do not duplicate layout-wide navbar rules here */
 }
 
 .logo {
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* Reduce top/bottom margin within navbar */
-  margin-top: 0;
-  margin-bottom: 0;
+  /* Declared with .navbar section for enhanced vibrance */
 }
 
 .logo-symbol {
-  color: #fff;
-  font-size: 1.5em;
-  text-shadow: 0 1px 4px rgba(40,55,120,0.23);
+  /* Declared above for vibrance */
 }
 
 .theme-bar {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  background-color: var(--secondary);
-  color: #fff;
-  border-radius: 20px;
-  padding: 0 12px;
-  height: 28px;
-  font-size: 1rem;
-  gap: 8px;
-  box-shadow: 0 2px 7px rgba(0,0,0,0.07);
-  text-shadow: 0 1px 2px rgba(20,20,40,0.08);
+  /* Declared above for vibrance */
 }
 
 /* Ensure the navbar container does not add vertical space */
@@ -379,7 +361,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
 .gap-lg {
   gap: 32px;
 }
