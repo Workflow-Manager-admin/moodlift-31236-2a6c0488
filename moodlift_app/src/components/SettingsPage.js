@@ -45,11 +45,12 @@ function SettingsPage({ mood, onThemeColorChange }) {
     setCssVar(colorVar, newColor);
     document.body.classList.add("mood-theme-transition");
     setTimeout(() => document.body.classList.remove("mood-theme-transition"), 700);
-    if (typeof onThemeChange === "function") {
-      onThemeChange({
+    // Inform parent via onThemeColorChange, if supplied
+    if (typeof onThemeColorChange === "function") {
+      onThemeColorChange({
         primary: colorVar === "--primary" ? newColor : primaryColor,
         secondary: colorVar === "--secondary" ? newColor : secondaryColor,
-        accent: colorVar === "--accent" ? newColor : accentColor
+        accent: colorVar === "--accent" ? newColor : accentColor,
       });
     }
   }
@@ -64,14 +65,15 @@ function SettingsPage({ mood, onThemeColorChange }) {
     setPrimaryColor(defaults["--primary"]);
     setSecondaryColor(defaults["--secondary"]);
     setAccentColor(defaults["--accent"]);
-    Object.keys(defaults).forEach(k => setCssVar(k, defaults[k]));
+    Object.keys(defaults).forEach((k) => setCssVar(k, defaults[k]));
     document.body.classList.add("mood-theme-transition");
     setTimeout(() => document.body.classList.remove("mood-theme-transition"), 700);
-    if (typeof onThemeChange === "function") {
-      onThemeChange({
+    // Inform parent for reset too
+    if (typeof onThemeColorChange === "function") {
+      onThemeColorChange({
         primary: defaults["--primary"],
         secondary: defaults["--secondary"],
-        accent: defaults["--accent"]
+        accent: defaults["--accent"],
       });
     }
   }
