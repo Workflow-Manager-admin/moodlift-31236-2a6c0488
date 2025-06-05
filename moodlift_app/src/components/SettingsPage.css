@@ -1,0 +1,288 @@
+:root {
+  /* These will be overridden by main theme, but are used as fallback if needed */
+  --settings-glow: 0 0 16px var(--accent), 0 2px 18px var(--primary);
+}
+
+/* Vibrant animated/adaptive background for settings card/page */
+.settings-vibrant-bg {
+  background: linear-gradient(110deg, var(--primary) 22%, var(--accent) 90%, var(--secondary) 100%);
+  animation: settingsBgAnimate 2.7s cubic-bezier(.53,1.54,.23,.91) alternate infinite settingsBgWave;
+  will-change: background;
+  border-radius: 34px;
+  padding-bottom: 18px;
+  transition: background 0.75s cubic-bezier(.29,1.10,.13,.99);
+}
+/* Background animation keyframes */
+@keyframes settingsBgAnimate {
+  0% { background-position: 0 0; }
+  100% { background-position: 120% 100%; }
+}
+@keyframes settingsBgWave {
+  0% { filter: brightness(1.03) saturate(1.22);}
+  55% { filter: brightness(1.17) saturate(1.34);}
+  100% { filter: brightness(1.11) saturate(1.20);}
+}
+
+.settings-card-bounce {
+  animation: pagePop 1.1s cubic-bezier(.45,1.3,.38,1.01);
+  background: linear-gradient(117deg, rgba(255,255,255,0.13) 50%, var(--base-light, #FFFDE9) 130%);
+  border-left: 10px solid var(--accent);
+  box-shadow: 0 4px 38px 0 var(--primary), 0 1.5px 24px var(--accent, #FF69B4, 0.09), var(--settings-glow, 0 4px 23px 0 var(--accent));
+  transition: box-shadow 0.64s, border-color 0.42s, background 0.84s;
+}
+
+@keyframes pagePop {
+  0%   { transform: scale(0.96) rotateZ(-1deg); opacity: 0; }
+  65%  { transform: scale(1.06) rotateZ(3deg); }
+  100% { transform: scale(1) rotateZ(0); opacity: 1; }
+}
+
+.settings-header {
+  margin-top: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+  user-select: none;
+  animation: headerJump 1.2s cubic-bezier(.22,1.62,.32,1.04);
+}
+@keyframes headerJump {
+  0%   { transform: scale(0.9) translateY(-20px); opacity: 0; }
+  78%  { transform: scale(1.11) translateY(8px);}
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.fancyify {
+  filter: drop-shadow(0 2.5px 11px var(--secondary, #6ec6ff77));
+}
+
+.settings-emoji {
+  font-size: 2.8rem;
+  filter: drop-shadow(0 0 9px var(--accent, #ff69b4af));
+  animation: emojiWave 2.6s cubic-bezier(.55,1.44,.31,1.02) infinite alternate;
+}
+@keyframes emojiWave {
+  0% { transform: rotate(-3deg) scale(0.97);}
+  22% { transform: rotate(5deg) scale(1.08);}
+  62% { transform: rotate(-8deg) scale(0.93);}
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.settings-title {
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--accent, #ff69b4);
+  font-weight: 800;
+  background: linear-gradient(98deg, var(--accent), var(--primary), var(--secondary) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 14px var(--primary, #FFB34777));
+  letter-spacing: 0.03em;
+  animation: titleGlow 3.32s cubic-bezier(.45,1.3,.38,1.01) infinite alternate;
+  font-family: inherit;
+  text-shadow: 0 2.5px 6px var(--primary, #ffb34766);
+}
+@keyframes titleGlow {
+  0% { text-shadow: 0 2.5px 6px var(--primary, #ffb34755);}
+  80% { text-shadow: 0 4px 18px var(--primary, #ffb347aa);}
+  100% { text-shadow: 0 2.5px 6px var(--accent, #ff69b4aa);}
+}
+
+/* Card with internal float, pop, and soft-glassed background */
+.settings-main-card {
+  background: linear-gradient(111deg, rgba(255,255,255,0.13) 56%, var(--secondary, #6ec6ff) 120%);
+  border-radius: 16px;
+  box-shadow: 0 2px 19px 0 var(--secondary, #6ec6ff18), 0 5px 12px 0 var(--primary, #ffb34711);
+  padding: 20px 24px 14px 24px;
+  margin-bottom: 17px;
+  width: 90%;
+  max-width: 440px;
+  animation: cardFloat 1.3s cubic-bezier(.34,1.52,.29,1.08);
+  transition: background 0.7s, box-shadow 0.5s;
+  margin-left: auto;
+  margin-right: auto;
+}
+@keyframes cardFloat {
+  0% { transform: translateY(16px) scale(0.98); opacity: 0.4;}
+  72% { transform: translateY(-10px) scale(1.05);}
+  100% { transform: translateY(0) scale(1); opacity: 1;}
+}
+
+
+.settings-subtitle {
+  font-size: 1.17em;
+  font-weight: 700;
+  color: var(--primary, #ffb347);
+  letter-spacing: 0.02em;
+  margin-bottom: 13px;
+  animation: subtitleSlideIn 0.88s cubic-bezier(.25,1.32,.31,.99);
+}
+@keyframes subtitleSlideIn {
+  0%   { opacity: 0; transform: translateY(-18px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+
+/* Main options list layout */
+.settings-options {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.settings-option-row {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 4px;
+  background: linear-gradient(95deg, rgba(255,255,255,0.09) 38%, var(--accent, #ff69b4) 110%);
+  border-radius: 13px;
+  padding: 11px 12px;
+  box-shadow: 0 2px 8px 0 var(--accent, #ff69b4aa), 0 2px 7px rgba(40,40,100,0.05);
+  transition: background 0.49s;
+  position: relative;
+  cursor: pointer;
+}
+.settings-option-row:hover,
+.settings-option-row:focus-within {
+  background: linear-gradient(92deg, var(--accent, #ff69b4) 24%, var(--primary, #ffb347) 98%);
+  box-shadow: 0 4.5px 18px 0 var(--primary, #ffb347cc), 0 0.5px 12px rgba(100,100,220,0.09);
+}
+
+.settings-label {
+  font-weight: 700;
+  color: var(--base-dark, #00008b);
+  margin-right: 8px;
+  font-size: 1.04em;
+  letter-spacing: 0.01em;
+  min-width: 104px;
+  text-shadow: 0 1.5px 4px var(--primary, #ffb34733);
+}
+
+.settings-switch-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* Faux playful animated switch with hover pulse effect */
+.faux-switch {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+.faux-switch input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.faux-slider {
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, var(--accent, #ff69b4) 40%, var(--primary, #ffb347) 100%);
+  box-shadow: 0 1.5px 8px var(--secondary, #6ec6ff55);
+  position: relative;
+  transition: background 0.23s, box-shadow 0.33s;
+  cursor: not-allowed;
+}
+.faux-slider:before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--base-dark, #00008b);
+  box-shadow: 0 1.5px 7px var(--primary, #ffb34777);
+  transition: left 0.21s cubic-bezier(0.7,0.09,0.27,0.91), background 0.21s;
+  animation: fauxSwitchPulse 2.7s cubic-bezier(.44,1.23,.41,.91) infinite alternate;
+}
+@keyframes fauxSwitchPulse {
+  0% { box-shadow: 0 1.5px 7px var(--primary, #ffb34755);}
+  84% { box-shadow: 0 4.5px 24px var(--accent, #ff69b433);}
+  100% { box-shadow: 0 1.5px 7px var(--primary, #ffb3477b);}
+}
+
+/* Option hint (coming soon) style */
+.settings-option-hint {
+  color: var(--base-dark, #00008b);
+  font-size: 0.97em;
+  font-style: italic;
+  opacity: .81;
+  margin-left: 8px;
+  letter-spacing: 0.01em;
+}
+
+/* Personalize note */
+.settings-soon-note {
+  color: var(--accent, #FF69B4);
+  font-style: italic;
+  font-size: 1.07em;
+  opacity: 0.96;
+  margin-top: 11px;
+  font-weight: 700;
+  text-align: center;
+  transition: color 0.41s cubic-bezier(.55,1.14,.31,1.01);
+  animation: soonGlow 1.7s cubic-bezier(.61,1.1,.23,.98) infinite alternate;
+}
+
+@keyframes soonGlow {
+  0%   { color: var(--accent, #FF69B4); text-shadow: 0 2px 10px var(--primary, #FFB34799);}
+  60%  { color: var(--primary, #FFB347);}
+  100% { color: var(--accent, #FF69B4); text-shadow: 0 3px 19px var(--accent, #ff69b4cc);}
+}
+/* Animate placeholder text in settings page for whimsy */
+.settings-placeholder-text-animate {
+  margin-top: 25px;
+  opacity: 0.9;
+  font-size: 1.13em;
+  color: var(--secondary, #6ec6ff);
+  animation: settingsTextUp 1.5s cubic-bezier(.36,1.24,.28,.97);
+  background: linear-gradient(88deg, rgba(255,255,255,0.10) 10%, var(--secondary, #6ec6ff) 97%);
+  border-radius: 11px;
+  padding: 12px 9px 10px 17px;
+  box-shadow: 0 2.5px 9px 0 var(--accent, #ff69b488), 0 2px 10px rgba(50,80,110,0.07);
+  transition: background 0.6s, color 0.53s;
+}
+@keyframes settingsTextUp {
+  0%   {opacity: 0; transform: translateY(25px) scale(0.97);}
+  70%  {opacity: .91; transform: scale(1.06);}
+  100% {opacity: .95; transform: translateY(0);}
+}
+
+/* Animate buttons if any will be added later */
+.settings-main-card button,
+.settings-main-card .btn {
+  background: linear-gradient(91deg, var(--primary), var(--accent));
+  color: var(--text-color, #fff);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 23px;
+  font-size: 1.09rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1.5px 7px rgba(255,255,255,0.09);
+  transition: background 0.19s, color 0.17s, transform 0.19s;
+  margin-top: 11px;
+}
+.settings-main-card button:hover,
+.settings-main-card .btn:hover {
+  background: linear-gradient(94deg, var(--accent), var(--primary));
+  color: var(--base-dark, #00008b);
+  transform: scale(1.07);
+}
+.settings-main-card button:active {
+  transform: scale(0.98) rotateZ(-2deg);
+}
+
+@media (max-width: 720px) {
+  .settings-main-card { max-width: 96vw; width: 99%; }
+  .settings-option-row { padding: 10px 4px; }
+}
+@media (max-width: 520px) {
+  .settings-header { flex-direction: column; }
+  .settings-title   { font-size: 1.13rem;}
+  .settings-main-card { padding: 10px 2vw; }
+}
