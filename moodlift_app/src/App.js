@@ -304,8 +304,27 @@ function App() {
   };
   const handleDiaryBack = () => setCurrentPage("main");
 
-  // Set username and dob — stubs to later connect to settings (not requested in this task, but for completeness)
-  // const handleProfileEdit = ({ username, dateOfBirth }) => setProfile({ username, dateOfBirth });
+  // Handler for profile field changes (username, dob, dailyMoodStatus)
+  // PUBLIC_INTERFACE
+  const handleProfileChange = React.useCallback(({ username, dateOfBirth, dailyMoodStatus }) => {
+    setProfile(prev => ({
+      ...prev,
+      username: username !== undefined ? username : prev.username,
+      dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : prev.dateOfBirth
+    }));
+    if (dailyMoodStatus !== undefined) {
+      setSelectedMood(dailyMoodStatus);
+    }
+  }, []);
+
+  // Handler for adding a diary entry from profile
+  // PUBLIC_INTERFACE
+  const handleAddDiaryEntry = React.useCallback(({ date, mood, text }) => {
+    setDiaries(prev => [
+      { date, mood, text },
+      ...prev
+    ]);
+  }, []);
 
   /**
    * Conditional rendering for main, diary, profile, and settings pages:
