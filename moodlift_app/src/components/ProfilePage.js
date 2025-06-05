@@ -250,6 +250,7 @@ function ProfilePage({
               <input
                 type="date"
                 value={dateOfBirth}
+                placeholder="Enter your date of birth"
                 autoFocus
                 onChange={e => setDateOfBirth(e.target.value)}
                 style={{
@@ -276,12 +277,12 @@ function ProfilePage({
               <button
                 className="btn"
                 style={{padding:"3px 8px", fontSize:"1em"}}
-                onClick={() => { setDateOfBirth(initialDOB); setEditingDOB(false); }}>✖</button>
+                onClick={() => { setDateOfBirth(""); setEditingDOB(false); }}>✖</button>
             </>
           ) : (
             <>
-              {getPrettyDate(dateOfBirth)}
-              {getAge(dateOfBirth) !== null && (
+              {dateOfBirth === "" ? <span style={{color: "#fff9a6", opacity:0.78, fontStyle:"italic"}}>Date of birth not set</span> : getPrettyDate(dateOfBirth)}
+              {getAge(dateOfBirth) !== null && dateOfBirth !== "" && (
                 <span style={{ opacity: 0.82, marginLeft: 10 }}>({getAge(dateOfBirth)} yrs)</span>
               )}
               <button
