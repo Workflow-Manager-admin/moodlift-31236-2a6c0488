@@ -3,6 +3,7 @@ import './App.css';
 import MoodSelector from './components/MoodSelector';
 import './components/MoodSelector.css';
 import MemeJokeCard from './components/MemeJokeCard';
+import GifQuoteCard from './components/GifQuoteCard';
 
 const MOOD_THEMES = {
   happy: {
