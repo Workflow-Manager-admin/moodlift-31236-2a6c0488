@@ -1,0 +1,238 @@
+.diary-page-root {
+  /* Mood-adaptive gradient with lively animation */
+  background: linear-gradient(
+    112deg,
+    var(--base-light, #FFFDE9) 0%,
+    var(--primary, #FFB347) 55%,
+    var(--accent, #FF69B4) 100%
+  );
+  background-size: 240% 240%;
+  animation: diary-bg-animate 8s ease-in-out infinite alternate;
+  min-height: 100vh;
+  padding: 0;
+  transition: background 0.91s cubic-bezier(.47,1.28,.41,1.08);
+}
+@keyframes diary-bg-animate {
+  0% { background-position: 0% 90%; }
+  50% { background-position: 100% 40%; }
+  100% { background-position: 15% 100%; }
+}
+
+.diary-card-vibrant {
+  position: relative;
+  padding: 28px 28px 29px 28px;
+  margin-bottom: 44px;
+  background: linear-gradient(
+    111deg,
+    rgba(255,255,255,0.22) 14%,
+    var(--secondary, #6EC6FF) 97%
+  );
+  border-radius: 18px 25px 15px 27px/21px 19px 32px 10px;
+  box-shadow:
+    0 6px 32px 0 var(--primary, #FFB34799),
+    0 2.5px 30px 0 var(--accent, #FF69B488),
+    0 2px 8px #1a1a2440;
+  border-left: 8px solid var(--accent);
+  border-top: 3.5px dashed var(--primary);
+  border-bottom: 2.6px double var(--secondary);
+  overflow: visible;
+  z-index: 2;
+  animation: diaryCardPop 0.93s cubic-bezier(.51,1.26,.37,.98);
+}
+@keyframes diaryCardPop {
+  0% { transform: scale(0.89) translateY(44px) rotate(-4deg); opacity: 0.5;}
+  75% { transform: scale(1.06) translateY(-5px) rotate(3deg);}
+  100% { transform: scale(1) translateY(0) rotate(0); opacity: 1;}
+}
+
+/* Diary Mood Icon with animated bounce and glow */
+.diary-mood-icon {
+  display: inline-block;
+  font-size: 2.3em;
+  margin-right: 12px;
+  filter: drop-shadow(0 6px 18px var(--accent, #FF69B477));
+  animation: moodEmojiPop 1.8s cubic-bezier(.45,1.49,.38,1.01) infinite alternate;
+  vertical-align: middle;
+}
+@keyframes moodEmojiPop {
+  0% { transform: scale(1.10) rotate(-7deg);}
+  60% { transform: scale(1.21) rotate(8deg);}
+  100% { transform: scale(1) rotate(0);}
+}
+
+.diary-back-btn {
+  background: linear-gradient(95deg, var(--primary), var(--accent));
+  color: var(--base-dark, #1a1a1a);
+  border: none;
+  border-radius: 11px;
+  padding: 7px 18px;
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-right: 13px;
+  margin-left: 2px;
+  box-shadow: 0 2.5px 10px 0 var(--primary, #FFB34733);
+  cursor: pointer;
+  transition: background 0.23s, color 0.21s, transform .17s;
+  animation: btnPop 1.17s cubic-bezier(.42,1.21,.34,1.18);
+}
+.diary-back-btn:hover,
+.diary-back-btn:focus {
+  background: linear-gradient(97deg, var(--accent), var(--primary));
+  color: var(--accent, #FF69B4);
+  transform: scale(1.09);
+}
+@keyframes btnPop {
+  0% { transform: scale(0.93);}
+  72% { transform: scale(1.13);}
+  100% { transform: scale(1);}
+}
+
+/* Animated accent under the mood label */
+.diary-mood-underline {
+  width: 66px;
+  height: 5px;
+  margin-left: 0;
+  margin-top: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent) 77%, var(--secondary) 100%);
+  border-radius: 8px;
+  opacity: 0.89;
+  animation: underPulse 2.1s cubic-bezier(.44,1.24,.29,1.02) infinite alternate;
+}
+@keyframes underPulse {
+  0% { filter: brightness(1.01) blur(0.5px); }
+  50% { filter: brightness(1.15) blur(1.4px);}
+  100% { filter: brightness(1.03) blur(0);}
+}
+
+/* Vibrant textarea for writing diary entry with focus/typing animation */
+.diary-textarea {
+  background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, var(--base-light, #FFFDE9) 90%);
+  border: 2.2px solid var(--primary);
+  border-radius: 14px;
+  width: 100%;
+  min-height: 120px;
+  font-size: 1.13em;
+  color: var(--text-color, #1a1a1a);
+  font-family: inherit;
+  padding: 12px 15px;
+  box-shadow: 0 3px 11px 0 var(--accent, #FF69B433), 0 1.5px 7px 0 var(--secondary, #6EC6FF33);
+  outline: none;
+  transition: border 0.22s, box-shadow 0.22s, background 0.44s;
+  margin-bottom: 13px;
+  resize: vertical;
+  animation: textareaPop 0.94s cubic-bezier(.34,1.36,.21,.97);
+}
+.diary-textarea:focus {
+  border-color: var(--accent);
+  background: linear-gradient(114deg, var(--base-light, #FFFDE9) 45%, var(--accent, #FF69B4) 98%);
+  box-shadow: 0 7px 18px 0 var(--primary, #FFB34766), 0 3.5px 11px 0 var(--accent, #FF69B488);
+}
+@keyframes textareaPop {
+  0% { opacity: 0; transform: scale(0.93) translateY(25px);}
+  77% { opacity: 1; transform: scale(1.09) translateY(-10px);}
+  100% { opacity: 1; transform: scale(1) translateY(0);}
+}
+
+/* Save button - lively, animated with icon */
+.diary-save-btn {
+  background: linear-gradient(91deg, var(--accent), var(--primary));
+  color: var(--base-dark, #00072B);
+  font-weight: 800;
+  border: none;
+  border-radius: 13px;
+  padding: 11px 37px 11px 29px;
+  font-size: 1.13em;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 1.5px 9px 0 var(--primary, #FFB34777), 0 2px 7px var(--accent, #FF69B4aa);
+  position: relative;
+  transition: background 0.27s, color 0.18s, transform 0.19s;
+  animation: btnFloat 1.22s cubic-bezier(.38,1.32,.27,1.09);
+}
+.diary-save-btn:after {
+  content: "💾";
+  position: absolute;
+  right: 16px;
+  top: 47%;
+  transform: translateY(-56%) scale(1.12);
+  filter: drop-shadow(0 0 5px var(--secondary, #6EC6FF88));
+  opacity: 0.86;
+  pointer-events: none;
+  transition: transform 0.23s;
+}
+.diary-save-btn:hover,
+.diary-save-btn:focus {
+  background: linear-gradient(93deg, var(--primary), var(--accent));
+  color: var(--accent, #FF69B4);
+  transform: scale(1.08);
+}
+@keyframes btnFloat {
+  0%   { transform: scale(0.95) translateY(25px); }
+  82%  { transform: scale(1.11) translateY(-10px);}
+  100% { transform: scale(1) translateY(0);}
+}
+
+/* Success message with happy bounce */
+.diary-save-success {
+  color: var(--accent, #FF69B4);
+  font-weight: 700;
+  font-size: 1.13em;
+  animation: successPop 1.18s cubic-bezier(.41,1.14,.31,1.01);
+  letter-spacing: 0.01em;
+  padding-left: 1em;
+  display: inline-block;
+}
+@keyframes successPop {
+  0%   { opacity: 0; transform: scale(1.2) rotate(-8deg);}
+  40%  { opacity: 0.8; transform: scale(1.08);}
+  75%  { opacity: 1; transform: scale(.98);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+/* Mood tag styling below the save bar */
+.diary-mood-tag {
+  margin-top: 17px;
+  opacity: 0.87;
+  font-size: 1.06em;
+  color: var(--text-secondary, #fff7);
+  font-style: italic;
+  text-align: left;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  animation: tagGlow 2.7s cubic-bezier(.63,1.23,.41,.99) infinite alternate;
+}
+@keyframes tagGlow {
+  0% { color: var(--text-secondary, #fff7);}
+  65% { color: var(--accent);}
+  100% { color: var(--primary);}
+}
+
+/* Responsive tweaks for vibrant diary page */
+@media (max-width: 720px) {
+  .diary-card-vibrant {
+    padding: 15px 6vw;
+    border-radius: 14px 17px 11px 19px/20px 13px 19px 9px;
+  }
+  .diary-save-btn {
+    width: 98%;
+    max-width: 390px;
+    margin-top: 7px;
+    font-size: 1.03em;
+  }
+  .diary-textarea {
+    min-height: 85px;
+    font-size: 1em;
+  }
+}
+@media (max-width: 520px) {
+  .diary-card-vibrant {
+    padding: 9px 2vw 14px 2vw;
+    border-radius: 13px 9px 11px 13px/12px 12px 17px 10px;
+    margin-bottom: 33px;
+  }
+  .diary-textarea { padding: 8px 7px; font-size: 0.98em;}
+  .diary-save-btn { font-size: 0.96em; padding: 8px 17px 8px 13px;}
+  .diary-back-btn { padding: 6px 12px; font-size: 1em;}
+}
