@@ -115,6 +115,8 @@ function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [meme, setMeme] = useState(null); // meme object
   const [joke, setJoke] = useState(null); // joke object
+  const [gif, setGif] = useState(null); // gif object
+  const [quote, setQuote] = useState(null); // quote object
   const prevMood = useRef(null);
 
   // --- MOCK APIs (stubbed) ---
