@@ -193,6 +193,7 @@ function ProfilePage({
                 type="text"
                 value={username}
                 autoFocus
+                placeholder="Enter your username"
                 onChange={e => setUsername(e.target.value)}
                 style={{
                   fontWeight: 700,
@@ -218,11 +219,11 @@ function ProfilePage({
               <button
                 className="btn"
                 style={{padding:"3px 8px", fontSize:"1em"}}
-                onClick={() => { setUsername(initialUsername); setEditingUsername(false); }}>✖</button>
+                onClick={() => { setUsername(""); setEditingUsername(false); }}>✖</button>
             </span>
           ) : (
             <>
-              {username}
+              {username === "" ? <span style={{color: "#fff9a6", opacity:0.78, fontStyle:"italic"}}>No username set</span> : username}
               <button
                 className="btn"
                 type="button"
