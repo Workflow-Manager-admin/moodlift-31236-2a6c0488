@@ -288,53 +288,49 @@ function ProfilePage({
           </div>
         )}
 
-        {/* Daily Mood Status (select) */}
+        {/* Daily Mood Status - now read-only and prominent, synced in real-time from App.js/selectedMood */}
         <div
           style={{
-            margin: "20px 0 5px 0",
-            color: "var(--text-color, #fff)",
-            fontWeight: 600,
-            fontSize: "1.13em",
+            margin: "25px 0 5px 0",
+            color: "var(--primary, #FFB347)",
+            fontWeight: 700,
+            fontSize: "1.17em",
             textAlign: "center",
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
+            letterSpacing: "0.01em",
           }}
         >
-          Today's Mood:&nbsp;
-          <span>
-            <select
-              style={{
-                fontWeight: 700,
-                color: dailyMoodStatus ? "var(--primary)" : "#bbb",
-                background: "rgba(255,255,255,0.13)",
-                border: "1.5px solid var(--primary)",
-                borderRadius: 8,
-                fontSize: "1.07em",
-                padding: "2.5px 11px",
-                marginRight: 7,
-                marginLeft: 5,
-                transition: "color 0.7s, font-family 0.7s"
-              }}
-              value={dailyMoodStatus || ""}
-              onChange={e => {
-                setDailyMoodStatus(e.target.value);
-                if (onProfileChange) {
-                  onProfileChange({
-                    username,
-                    dateOfBirth,
-                    dailyMoodStatus: e.target.value
-                  });
-                }
-              }}
-            >
-              <option value="" disabled>
-                Select your mood for today
-              </option>
-              {moodOptions.map(m =>
-                <option key={m.key} value={m.key}>{m.emoji} {m.label}</option>
+          {/* Prominent mood field */}
+          <span style={{
+            background: "linear-gradient(95deg, var(--primary) 60%, var(--accent) 100%)",
+            color: "var(--text-color, #fff)",
+            borderRadius: 15,
+            padding: "8px 23px",
+            fontSize: "1.25em",
+            fontWeight: 800,
+            boxShadow: "0 1.8px 9px 0 rgba(70,60,120,0.11)",
+            display: "flex",
+            alignItems: "center",
+            minHeight: "2.3em",
+            border: "2.2px solid var(--accent, #FF69B4)",
+            transition: "background 0.6s, color 0.6s, font-family 0.6s"
+          }}>
+            <span style={{marginRight: 11, fontSize: "1.28em"}}>
+              {moodMeta[dailyMoodStatus]?.emoji || "🙂"}
+            </span>
+            Today's Mood:&nbsp;
+            <span style={{marginLeft: 5}}>
+              {moodMeta[dailyMoodStatus]?.label ? (
+                <>
+                  {moodMeta[dailyMoodStatus].label}
+                </>
+              ) : (
+                <span style={{color: "#fff9a6", opacity:0.74, fontStyle:"italic"}}>Not set</span>
               )}
-            </select>
+            </span>
           </span>
         </div>
         <div
@@ -343,7 +339,8 @@ function ProfilePage({
             fontSize: "1em",
             fontStyle: "italic",
             marginBottom: 14,
-            textShadow: "0 1px 6px rgba(20,20,40,0.12)"
+            textShadow: "0 1px 6px rgba(20,20,40,0.12)",
+            textAlign: "center"
           }}
         >
           {dailyMoodStatus ? (moodMeta[dailyMoodStatus]?.vibe || "Vibin'!") : mm.vibe}
