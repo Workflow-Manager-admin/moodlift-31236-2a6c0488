@@ -77,7 +77,9 @@ function BottomNavBar({ selectedNav, onSelectNav }) {
           aria-label={item.label}
           aria-current={selectedNav === item.key}
           tabIndex={0}
-          onClick={() => onSelectNav && onSelectNav(item.key)}
+          onClick={() => {
+            if (onSelectNav) onSelectNav(item.key);
+          }}
           type="button"
         >
           {item.icon}
