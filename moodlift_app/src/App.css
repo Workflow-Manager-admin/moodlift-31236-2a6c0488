@@ -55,6 +55,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  /* Reduce top/bottom margin within navbar */
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .logo-symbol {
@@ -70,12 +73,18 @@ body {
   background-color: var(--secondary);
   color: #fff;
   border-radius: 20px;
-  padding: 0 16px;
-  height: 36px;
+  padding: 0 12px;
+  height: 28px;
   font-size: 1rem;
-  gap: 10px;
+  gap: 8px;
   box-shadow: 0 2px 7px rgba(0,0,0,0.07);
   text-shadow: 0 1px 2px rgba(20,20,40,0.08);
+}
+
+/* Ensure the navbar container does not add vertical space */
+.navbar .container {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* APP CONTAINER/STACKING LAYOUTS */
@@ -287,14 +296,14 @@ body {
 
 @media (max-width: 520px) {
   .main-content {
-    padding-top: 54px;
+    padding-top: 38px;
   }
   .container {
-    margin-top: 60px;
+    margin-top: 48px;
     padding: 0 1vw;
   }
-  .theme-bar { font-size: 0.87rem; padding: 0 7px; height: 28px;}
-  .navbar { min-height: 40px; padding: 8px 0; }
+  .theme-bar { font-size: 0.87rem; padding: 0 7px; height: 22px;}
+  .navbar { min-height: 32px; padding: 4px 0; }
   .card {
     border-radius: 12px;
     font-size: 0.98em;
