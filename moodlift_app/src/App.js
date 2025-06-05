@@ -396,7 +396,27 @@ function App() {
       </React.Suspense>
     );
   } else if (currentPage === "settings") {
-    pageContent = <SettingsPage mood={selectedMood} />;
+    pageContent = (
+      <SettingsPage
+        mood={selectedMood}
+        onThemeColorChange={(colors) => {
+          // Apply chosen theme color overrides live
+          if (colors && typeof colors === "object") {
+            if (colors.primary)
+              document.documentElement.style.setProperty("--primary", colors.primary);
+            if (colors.secondary)
+              document.documentElement.style.setProperty("--secondary", colors.secondary);
+            if (colors.accent)
+              document.documentElement.style.setProperty("--accent", colors.accent);
+            // Animate transition for a more playful effect
+            document.body.classList.add("mood-theme-transition");
+            setTimeout(() => {
+              document.body.classList.remove("mood-theme-transition");
+            }, 700);
+          }
+        }}
+      />
+    );
   }
 
   return (

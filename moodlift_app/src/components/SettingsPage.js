@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import "./SettingsPage.css";
 
 /**
- * SettingsPage – Vibrant, playful, mood-adaptive settings page with live color tweak support.
+ * SettingsPage – Vibrant, playful, mood-adaptive settings page.
  *
  * Props:
  *   mood (string): current selected mood, for dynamic theming
- *   onThemeChange (function): optional, pass up {primary, secondary, accent}
+ *   onThemeColorChange (function): optional, fires on every theme color change with {primary, secondary, accent}
  */
 
 // PUBLIC_INTERFACE
-function SettingsPage({ mood, onThemeChange }) {
+function SettingsPage({ mood, onThemeColorChange }) {
   // Mood details for emoji header or highlight
   const moodMeta = {
     happy:     { emoji: "😄", header: "Sunny Settings" },
