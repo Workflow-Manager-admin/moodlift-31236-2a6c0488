@@ -330,9 +330,27 @@ function App() {
           onBack={handleDiaryBack}
         />
       )}
+      {currentPage === "profile" && (
+        // ProfilePage expects mood prop for adaptive theming
+        <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
+          {
+            // Lazy load ProfilePage if desired; here, direct import
+            (() => {
+              const ProfilePage = require("./components/ProfilePage").default;
+              return <ProfilePage mood={selectedMood} />;
+            })()
+          }
+        </React.Suspense>
+      )}
       {/* Optionally, add a fixed theming bar or footer here in the future */}
       <BottomNavBar
-        selectedNav={currentPage === "diary" ? "write" : "home"}
+        selectedNav={
+          currentPage === "diary"
+            ? "write"
+            : currentPage === "profile"
+            ? "profile"
+            : "home"
+        }
         onSelectNav={handleSelectNav}
       />
     </div>
