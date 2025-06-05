@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 
 /**
  * ProfilePage (Refactored)
- * - All profile fields are now editable in-place: username (text), date of birth (date picker), mood status (select), new diary entry (textarea)
- * - Directly adds new diary entries through input at the top.
- * - All changes propagate via the onProfileChange and onAddDiaryEntry props for state lifting.
+ * - Profile fields (username, date of birth, mood status) are editable in-place.
+ * - Diary entries are displayed in a list, but diary entry input/editor is removed:
+ *   new entries are added ONLY via DiaryPage and provided in the diaries prop.
+ * - All changes propagate via the onProfileChange prop for state lifting.
  * - Mood-based theming is preserved for all elements.
  *
  * Props:
@@ -14,9 +15,8 @@ import React, { useState, useEffect } from "react";
  *   dailyMoodStatus (string): current mood, controlled
  *   diaries (array): list of diary entries [{date, mood, text}]
  *   onProfileChange (function): fires when username, dob, or mood status is changed ({ username, dateOfBirth, dailyMoodStatus })
- *   onAddDiaryEntry (function): adds new diary entry ({ date, mood, text }) (date auto today)
  */
- // PUBLIC_INTERFACE
+// PUBLIC_INTERFACE
 function ProfilePage({
   mood,
   username: initialUsername = "",
@@ -24,10 +24,8 @@ function ProfilePage({
   dailyMoodStatus: initialDailyMood = "",
   diaries = [],
   onProfileChange,
-  onAddDiaryEntry,
 }) {
   // Controlled fields: internal state for fast UI, propagate up on Save/Update
-  // Always initialize as empty string or appropriate blank value
   const [username, setUsername] = useState(initialUsername || "");
   const [editingUsername, setEditingUsername] = useState(false);
 
@@ -35,9 +33,6 @@ function ProfilePage({
   const [editingDOB, setEditingDOB] = useState(false);
 
   const [dailyMoodStatus, setDailyMoodStatus] = useState(initialDailyMood || "");
-  const [diaryText, setDiaryText] = useState("");
-  const [addingDiary, setAddingDiary] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Moods for mood selector
   const moodOptions = [
@@ -70,7 +65,7 @@ function ProfilePage({
   );
   const mm = moodMeta[mainMood] || moodMeta[mood] || moodMeta.default;
 
-  // Sync from parent when navigating away => back: controlled updates (rarely needed if ProfilePage lives continuously)
+  // Sync from parent when navigating away => back: controlled updates
   useEffect(() => { setUsername(initialUsername); }, [initialUsername]);
   useEffect(() => { setDateOfBirth(initialDOB); }, [initialDOB]);
   useEffect(() => { setDailyMoodStatus(initialDailyMood || ""); }, [initialDailyMood]);
@@ -117,23 +112,6 @@ function ProfilePage({
     // turn off editors
     if (field === "username") setEditingUsername(false);
     if (field === "dob") setEditingDOB(false);
-  }
-
-  // Add new diary entry
-  function handleAddDiary() {
-    if (!diaryText.trim() || !dailyMoodStatus) return;
-    const todayIso = new Date().toISOString().slice(0, 10);
-    if (onAddDiaryEntry) {
-      onAddDiaryEntry({
-        date: todayIso,
-        mood: dailyMoodStatus,
-        text: diaryText,
-      });
-    }
-    setDiaryText("");
-    setAddingDiary(false);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 1000);
   }
 
   // Theming is handled via CSS vars
@@ -369,72 +347,6 @@ function ProfilePage({
           }}
         >
           {dailyMoodStatus ? (moodMeta[dailyMoodStatus]?.vibe || "Vibin'!") : mm.vibe}
-        </div>
-      </section>
-
-      {/* Add Diary Entry */}
-      <section
-        className="card"
-        style={{
-          marginTop: 6,
-          marginBottom: 4,
-          background: "rgba(255,255,255,0.17)",
-          borderLeft: "7px solid var(--secondary)",
-          boxShadow: "0 2px 14px 0 rgba(21,70,120,0.10)",
-          minHeight: 80,
-          fontFamily: "inherit"
-        }}
-      >
-        <h2 style={{
-          fontWeight: 700,
-          fontSize: "1.14em",
-          color: "var(--secondary, #6EC6FF)",
-          letterSpacing: 0.02,
-          marginBottom: 8,
-          marginTop: 4
-        }}>
-          Add a New Diary Entry
-        </h2>
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 7 }}>
-          <textarea
-            style={{
-              resize: "vertical",
-              width: "98%",
-              minHeight: 44,
-              borderRadius: 9,
-              fontFamily: "inherit",
-              fontSize: "1.09em",
-              padding: "7px",
-              border: "1.2px solid var(--border-color, #edc)",
-              marginBottom: 5,
-              background: "rgba(255,255,255,0.12)",
-              color: "var(--text-color, #fff)",
-              outline: "none",
-              boxShadow: "0 1px 4px 0 rgba(60,60,120,0.08)",
-              transition: "border-color 0.19s, box-shadow 0.19s, color 0.5s, font-family 0.65s"
-            }}
-            placeholder="Write your diary entry for today (e.g. 'Describe your day or mood...')"
-            aria-label="Add diary entry"
-            value={diaryText}
-            onChange={e => setDiaryText(e.target.value)}
-            onFocus={() => setAddingDiary(true)}
-            onBlur={() => setAddingDiary(false)}
-            disabled={!dailyMoodStatus}
-          />
-          <div style={{ display: 'flex', gap: 10, alignItems: "center" }}>
-            <button
-              className="btn"
-              type="button"
-              style={{ minWidth: 84, marginLeft: 0 }}
-              disabled={!diaryText.trim() || !dailyMoodStatus}
-              onClick={handleAddDiary}
-            >
-              {saveSuccess ? "Saved!" : "Add Entry"}
-            </button>
-            <span style={{ fontSize: '0.97em', color: "var(--accent, #FF69B4)", opacity: 0.8, marginLeft: 4 }}>
-              {addingDiary && !dailyMoodStatus && "Select mood above to add diary entry!"}
-            </span>
-          </div>
         </div>
       </section>
 
