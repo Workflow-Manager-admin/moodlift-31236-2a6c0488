@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/moodlift-31236-2a6c0488/moodlift_app"
+}
