@@ -154,25 +154,34 @@ function App() {
   const [currentPage, setCurrentPage] = useState("main");
   const prevMood = useRef(null);
 
-  // New: app-level override color handling for SettingsPage-driven changes
-  // { primary, secondary, accent }
+  // App-level color override for settings. Null means fallback to mood, otherwise these override for all moods.
+  // If a user selects a color, the override persists across moods (unless reset).
   const [themeColorOverride, setThemeColorOverride] = useState({
     primary: null,
     secondary: null,
-    accent: null
+    accent: null,
   });
 
-  // Handler to receive color changes from SettingsPage and trigger app-wide theme update
   // PUBLIC_INTERFACE
+  /**
+   * Handles user's color selection in SettingsPage.
+   * Immediately updates app-level themeColorOverride and synchronizes global CSS variables.
+   * Change is global; persists across mood changes unless reset.
+   */
   const handleThemeColorChange = useCallback((colors) => {
+    // If any color provided, treat undefined as meaning "preserve last", but null as "clear/disable custom".
     setThemeColorOverride(prev => ({
       ...prev,
       ...colors,
+      // For reset-case: if explicit reset to the default values (from SettingsPage), force update all
     }));
-    // Set CSS variables immediately (so SettingsPage preview is not delayed)
+
+    // When user picks a color, update the CSS variables immediately so SettingsPage preview is up-to-date.
+    // themeColorOverride itself may not be updated instantly (setState is async), so merge manually:
+    const latestOverride = { ...themeColorOverride, ...colors };
     const theme = selectedMood ? (MOOD_THEMES[selectedMood] || FALLBACK_THEME) : FALLBACK_THEME;
-    applyThemeVars(theme, { ...themeColorOverride, ...colors });
-    // Animate transition
+    applyThemeVars(theme, latestOverride);
+    // Animate for instant feedback
     document.body.classList.add("mood-theme-transition");
     setTimeout(() => document.body.classList.remove("mood-theme-transition"), 850);
   }, [selectedMood, themeColorOverride]);
