@@ -159,12 +159,26 @@ body {
 /* Mood Selector Card */
 .mood-selector-card {
   border-left: 6px solid var(--primary);
-  background: linear-gradient(105deg, var(--primary) 2%, rgba(255,255,255,0.14) 80%);
+  background: linear-gradient(105deg, var(--primary) 3%, rgba(255,255,255,0.16) 87%);
   color: #fff !important;
+  box-shadow: 0 3px 18px 0 rgba(230,140,70,0.16), 0 1.5px 6px rgba(80,180,255,0.09);
+  border-radius: 1.7em;
+  padding-top: 24px;
+  padding-bottom: 19px;
+  margin-bottom: 18px;
 }
 .mood-selector-card *,
 .mood-selector-card h2 {
   color: #fff !important;
+}
+
+/* MoodSelector integration: adjust spacing of h2 for a pleasing layout */
+.mood-selector-card h2 {
+  margin-bottom: 14px;
+  font-size: 1.26rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 9px rgba(220,140,70,0.13);
 }
 
 /* Meme Bar Card */
