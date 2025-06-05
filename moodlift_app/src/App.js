@@ -6,6 +6,7 @@ import MemeJokeCard from './components/MemeJokeCard';
 import GifQuoteCard from './components/GifQuoteCard';
 import BottomNavBar from './components/BottomNavBar';
 import './components/BottomNavBar.css';
+import DiaryPage from './components/DiaryPage';
 
 const MOOD_THEMES = {
   happy: {
@@ -111,6 +112,12 @@ function loadWebFont(family, weights = ['400', '700']) {
   document.head.appendChild(link);
 }
 
+/*
+  Main App component handles page-level navigation between:
+    - Home content ("main")
+    - Write Your Own Diary ("diary")
+  and passes state and moods as needed.
+*/
 // PUBLIC_INTERFACE
 function App() {
   // Track the selected mood for the session (future: persist or send to backend if needed)
@@ -119,6 +126,7 @@ function App() {
   const [joke, setJoke] = useState(null); // joke object
   const [gif, setGif] = useState(null); // gif object
   const [quote, setQuote] = useState(null); // quote object
+  const [currentPage, setCurrentPage] = useState("main"); // "main" | "diary"
   const prevMood = useRef(null);
 
   // --- MOCK APIs (stubbed) ---
@@ -243,6 +251,22 @@ function App() {
     }[selectedMood] || selectedMood
   ) : "Default";
 
+  // Callback for navigation change from bottom nav bar
+  const handleSelectNav = (navKey) => {
+    if (navKey === "write") setCurrentPage("diary");
+    else if (navKey === "home") setCurrentPage("main");
+    // ...extend for future navs like profile/settings
+  };
+
+  // Handler after diary entry save (stub - can be hooked to an API)
+  const handleDiarySave = ({ mood, text }) => {
+    // Optionally show a toast, or add to main feed
+    // For now: just close diary screen and maybe reset nav
+    setCurrentPage("main");
+  };
+  // Handler to return from Diary page to main
+  const handleDiaryBack = () => setCurrentPage("main");
+
   return (
     <div className="app" data-mood={selectedMood || "default"}>
       {/* Navbar at the top */}
@@ -258,44 +282,49 @@ function App() {
         </div>
       </nav>
 
-      {/* Main content area */}
-      <main className="main-content">
-        <div className="container flex-col gap-lg">
-          {/* Mood Selector Section */}
-          <section className="card mood-selector-card">
-            <h2>Mood Selector</h2>
-            <MoodSelector
-              selectedMood={selectedMood}
-              onMoodChange={handleMoodChange}
-              // In the future, pass AI/auto detection handler here
-            />
-          </section>
-
-          {/* --- Meme Bar Section --- */}
-          <section className="card meme-bar">
-            <h2>Meme Bar</h2>
-            <MemeJokeCard type="meme" meme={meme} mood={selectedMood} />
-          </section>
-
-          {/* --- Joke Bar Section --- */}
-          <section className="card joke-bar">
-            <h2>Joke Bar</h2>
-            <MemeJokeCard type="joke" joke={joke} mood={selectedMood} />
-          </section>
-
-          {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
-          <div className="scrollable-content">
-            <section className="card gif-card">
-              <h2>GIF & Quote</h2>
-              <GifQuoteCard gif={gif} quote={quote} mood={selectedMood} />
+      {/* Page content */}
+      {currentPage === "main" && (
+        <main className="main-content">
+          <div className="container flex-col gap-lg">
+            {/* Mood Selector Section */}
+            <section className="card mood-selector-card">
+              <h2>Mood Selector</h2>
+              <MoodSelector
+                selectedMood={selectedMood}
+                onMoodChange={handleMoodChange}
+                // In the future, pass AI/auto detection handler here
+              />
             </section>
+
+            {/* --- Meme Bar Section --- */}
+            <section className="card meme-bar">
+              <h2>Meme Bar</h2>
+              <MemeJokeCard type="meme" meme={meme} mood={selectedMood} />
+            </section>
+
+            {/* --- Joke Bar Section --- */}
+            <section className="card joke-bar">
+              <h2>Joke Bar</h2>
+              <MemeJokeCard type="joke" joke={joke} mood={selectedMood} />
+            </section>
+
+            {/* Scrollable GIF/Quote Cards (optional, can be extended) */}
+            <div className="scrollable-content">
+              <section className="card gif-card">
+                <h2>GIF & Quote</h2>
+                <GifQuoteCard gif={gif} quote={quote} mood={selectedMood} />
+              </section>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      )}
+      {currentPage === "diary" && (
+        <DiaryPage mood={selectedMood} onSave={handleDiarySave} onBack={handleDiaryBack} />
+      )}
       {/* Optionally, add a fixed theming bar or footer here in the future */}
       <BottomNavBar
-        selectedNav={null}
-        onSelectNav={() => {}}
+        selectedNav={currentPage === "diary" ? "write" : "home"}
+        onSelectNav={handleSelectNav}
       />
     </div>
   );
