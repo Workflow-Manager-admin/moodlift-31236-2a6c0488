@@ -257,6 +257,7 @@ function App() {
     // Always switch navigation state based on BottomNavBar selection
     if (navKey === "write") setCurrentPage("diary");
     else if (navKey === "home") setCurrentPage("main");
+    else if (navKey === "profile") setCurrentPage("profile");
     // ...extend for future navs like profile/settings
     // Unknown navKeys are safely ignored
   };
