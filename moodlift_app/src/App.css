@@ -66,22 +66,59 @@ body {
 
 /* Animated navbar color shadow based on mood */
 /* === HEADER/NAVBAR GRID REFACTOR === */
+/* == Vibrant, animated navbar styles == */
 .navbar {
-  background: rgba(20, 20, 50, 0.98);
+  /* Gradient background with animated shimmering stripes */
+  background: linear-gradient(
+    120deg,
+    rgba(38,28,90,0.99) 0%,
+    var(--primary, #FFB347) 53%,
+    var(--accent, #FF69B4) 100%
+  );
+  background-size: 200% 200%;
+  animation: navbar-bg-animate 6s ease-in-out infinite alternate;
   padding: 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: none;
+  border-image: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary), var(--accent)) 1;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 100;
-  min-height: 48px;
+  min-height: 53px;
   color: #fff !important;
-  box-shadow: var(--nav-glow, 0 2px 7px #1a1a2440);
-  transition: box-shadow 0.68s cubic-bezier(.47,1.18,.29,1.03);
+  box-shadow:
+    0 4px 22px 0 var(--primary, #FFB34799),
+    0 0px 24px 0 var(--accent, #FF69B499),
+    0 2px 7px #1a1a2440,
+    var(--nav-glow, 0 2px 7px #1a1a2440);
+  transition:
+    box-shadow 0.68s cubic-bezier(.47,1.18,.29,1.03),
+    background 0.52s cubic-bezier(.5,1.11,.31,.97),
+    border-image 0.8s cubic-bezier(.31,1.21,.26,.93);
   display: block;
+  overflow: visible;
 }
+
+@keyframes navbar-bg-animate {
+  0% {
+    background-position: 0% 72%;
+  }
+  50% {
+    background-position: 100% 29%;
+  }
+  100% {
+    background-position: 33% 100%;
+  }
+}
+
 .navbar * {
   color: #fff !important;
+  /* Add playful glowing text for accent icons/brand */
+  text-shadow:
+    0 2px 12px var(--primary, #FFB34761),
+    0 1px 7px var(--accent, #FF69B461);
 }
 
 /* Grid layout for navbar container */
