@@ -16,8 +16,7 @@ function DiaryPage({ mood, onSave, onBack }) {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Track the mood at the start of writing; always tag the saved entry with the *current* mood (the prop)
-  // If mood changes during editing, styles/placeholder change immediately
+  // Track the current live mood (from prop) for labeling and theming; use effect triggers if mood prop changes
 
   // Helper for mood label/emoji
   const moodDetails = {
@@ -29,26 +28,29 @@ function DiaryPage({ mood, onSave, onBack }) {
     angry:   { label: "Angry", emoji: "😡" },
     chill:   { label: "Chill", emoji: "🧊" }
   };
+  // md is recalculated every render to reflect any mood prop update
   const md = moodDetails[mood] || { label: mood || "Unknown", emoji: "" };
 
-  // To provide better live theming and placeholder update, trigger a transition on mood change
+  // When mood prop changes, re-rendering ensures theming/emoji/label is updated immediately (automatic in React functional)
+  // But we can use useEffect if we want additional side effects
   const prevMoodRef = useRef(mood);
   useEffect(() => {
     if (prevMoodRef.current !== mood) {
-      // Optionally: Animate/visually indicate mood shift (CSS class, etc). For now, just focus/restore.
+      // Optionally animate or focus or indicate theme/mood transition here
       prevMoodRef.current = mood;
-      // Could reset entryText here if we want mood-specific text areas (not doing this now: preserves draft)
+      // Do not reset entryText — always preserve user in-progress writing even if they switch moods
     }
   }, [mood]);
 
-  // Handle Save: always tags with the *current* mood.
+  // When saving: always tag entry with CURRENT mood prop value
   const handleSave = async () => {
     setSaving(true);
-    // Simulate save
+    // Simulate save, e.g., send to backend including the current mood:
+    // entry: { mood, text: entryText }
     await new Promise(res => setTimeout(res, 800));
     setSaving(false);
     setSaveSuccess(true);
-    if (onSave) onSave({ mood, text: entryText });
+    if (onSave) onSave({ mood, text: entryText }); // mood is always latest from App.js
     setTimeout(() => setSaveSuccess(false), 1100);
     setEntryText("");
   };
