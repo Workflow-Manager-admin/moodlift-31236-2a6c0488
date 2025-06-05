@@ -152,7 +152,33 @@ body {
   background: linear-gradient(105deg, var(--primary) 2%, rgba(255,255,255,0.14) 80%);
 }
 
-/* Meme/Joke Card */
+/* Meme Bar Card */
+.meme-bar {
+  border-left: 6px solid var(--accent);
+  background: linear-gradient(98deg, var(--accent) 12%, rgba(255,255,255,0.13) 100%);
+  margin-bottom: 18px;
+  animation: memePop 0.9s cubic-bezier(.29,.71,.34,1.15);
+}
+@keyframes memePop {
+  0% { opacity: 0; transform: scale(0.86) translateY(18px);}
+  85% { opacity: 1; transform: scale(1.08) translateY(-8px);}
+  100% { opacity: 1; transform: scale(1) translateY(0);}
+}
+
+/* Joke Bar Card */
+.joke-bar {
+  border-left: 6px solid var(--primary);
+  background: linear-gradient(92deg, var(--primary) 10%, rgba(255,255,255,0.10) 100%);
+  margin-bottom: 24px;
+  animation: jokeEntry 0.8s cubic-bezier(.31,.68,.31,1.22);
+}
+@keyframes jokeEntry {
+  0% { opacity: 0; transform: scale(0.93) translateY(28px);}
+  70% { opacity: 1; transform: scale(1.05) translateY(-8px);}
+  100% { opacity: 1; transform: scale(1) translateY(0);}
+}
+
+/* Meme/Joke Card (legacy style for backward compatibility, may be reused elsewhere) */
 .meme-card {
   border-left: 6px solid var(--accent);
   background: linear-gradient(105deg, rgba(255,255,255,0.16) 30%, var(--accent) 100%);
