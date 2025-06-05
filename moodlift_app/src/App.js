@@ -1,35 +1,179 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 import MoodSelector from './components/MoodSelector';
 import './components/MoodSelector.css';
+
+const MOOD_THEMES = {
+  happy: {
+    '--primary': '#FFE066',
+    '--secondary': '#FFD24C',
+    '--accent': '#FFB800',
+    '--base-light': '#FFFFB0',
+    '--base-dark': '#FFD24C',
+    '--text-color': '#3C2E00',
+    '--border-color': 'rgba(255, 190, 0, 0.18)',
+    fontFamily: "'Fredoka One', 'Comic Sans MS', 'Inter', sans-serif",
+    bodyBg: 'linear-gradient(120deg, #FFFDE9 40%, #FFE066 80%, #FFB800 100%)',
+  },
+  sad: {
+    '--primary': '#5A80BA',
+    '--secondary': '#A3B9CE',
+    '--accent': '#6C91C2',
+    '--base-light': '#DCE9F6',
+    '--base-dark': '#284164',
+    '--text-color': '#F2F6FB',
+    '--border-color': 'rgba(60, 95, 165, 0.15)',
+    fontFamily: "'Nunito', 'Roboto', 'Helvetica', sans-serif",
+    bodyBg: 'linear-gradient(125deg, #284164 18%, #5A80BA 78%, #A3B9CE 100%)',
+  },
+  excited: {
+    '--primary': '#FF65A3',
+    '--secondary': '#FFF740',
+    '--accent': '#7AF9FF',
+    '--base-light': '#FFF8D3',
+    '--base-dark': '#7BC8F9',
+    '--text-color': '#61084B',
+    '--border-color': 'rgba(255, 101, 163, 0.18)',
+    fontFamily: "'Luckiest Guy', 'Caveat', 'Comic Sans MS', cursive, sans-serif",
+    bodyBg: 'linear-gradient(110deg, #FFF740 35%, #FF65A3 65%, #7AF9FF 100%)',
+  },
+  calm: {
+    '--primary': '#78D6C6',
+    '--secondary': '#CAE9EA',
+    '--accent': '#53B2A9',
+    '--base-light': '#E3FDFD',
+    '--base-dark': '#0A5259',
+    '--text-color': '#1C3636',
+    '--border-color': 'rgba(100, 180, 170, 0.13)',
+    fontFamily: "'Quicksand', 'Comfortaa', 'Roboto', sans-serif",
+    bodyBg: 'linear-gradient(120deg, #E3FDFD 10%, #78D6C6 70%, #53B2A9 95%)',
+  },
+  energetic: {
+    '--primary': '#FF6B06',
+    '--secondary': '#FFD166',
+    '--accent': '#19F365',
+    '--base-light': '#FFF2D9',
+    '--base-dark': '#FF572B',
+    '--text-color': '#FDB828',
+    '--border-color': 'rgba(255, 107, 6, 0.18)',
+    fontFamily: "'Bungee', 'Inter', 'Arial', cursive, sans-serif",
+    bodyBg: 'linear-gradient(115deg, #FFD166 20%, #FF6B06 80%, #19F365 95%)',
+  },
+  angry: {
+    '--primary': '#FF3939',
+    '--secondary': '#FD8261',
+    '--accent': '#6E0707',
+    '--base-light': '#FFEDED',
+    '--base-dark': '#300000',
+    '--text-color': '#FEEBE6',
+    '--border-color': 'rgba(255, 57, 57, 0.18)',
+    fontFamily: "'Oswald', 'Roboto Condensed', 'Arial', sans-serif",
+    bodyBg: 'linear-gradient(120deg, #300000 25%, #FD8261 74%, #FF3939 100%)',
+  },
+  chill: {
+    '--primary': '#8DE9C3',
+    '--secondary': '#A0C3D2',
+    '--accent': '#ACD8AA',
+    '--base-light': '#E4F9EF',
+    '--base-dark': '#17403A',
+    '--text-color': '#17403A',
+    '--border-color': 'rgba(140, 210, 170, 0.13)',
+    fontFamily: "'Manrope', 'Kumbh Sans', 'Quicksand', 'Arial', sans-serif",
+    bodyBg: 'linear-gradient(120deg, #E4F9EF 15%, #8DE9C3 77%, #A0C3D2 100%)'
+  }
+};
+
+const FALLBACK_THEME = {
+  '--primary': '#FFB347',
+  '--secondary': '#6EC6FF',
+  '--accent': '#FF69B4',
+  '--base-light': '#6EC6FF',
+  '--base-dark': '#00008b',
+  '--text-color': '#ffffff',
+  '--border-color': 'rgba(255, 255, 255, 0.1)',
+  fontFamily: "Inter, Roboto, Helvetica, Arial, sans-serif",
+  bodyBg: 'linear-gradient(120deg, #00008b, #FFB347 70%, #FF69B4 100%)',
+};
+
+// Google Fonts loader helper
+function loadWebFont(family, weights = ['400', '700']) {
+  // Only inject once per font
+  if (document.getElementById(`fontlink-${family}`)) return;
+  const formattedFamily = family.replace(/ /g, '+');
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.id = `fontlink-${family}`;
+  link.href = `https://fonts.googleapis.com/css?family=${formattedFamily}:${weights.join(',')}&display=swap`;
+  document.head.appendChild(link);
+}
 
 // PUBLIC_INTERFACE
 function App() {
   // Track the selected mood for the session (future: persist or send to backend if needed)
   const [selectedMood, setSelectedMood] = useState(null);
+  const prevMood = useRef(null);
 
-  // Placeholder: In the future, use this hook for AI/auto detection of mood
-  // const detectAIMood = useCallback(() => {
-  //   // TODO: Implement Kavia AI-based mood detection here
-  // }, []);
+  // Side effect: update CSS variables and font when selectedMood changes
+  useEffect(() => {
+    const theme = selectedMood ? (MOOD_THEMES[selectedMood] || FALLBACK_THEME) : FALLBACK_THEME;
+
+    // Animate color/theme transitions on body
+    document.body.classList.add('mood-theme-transition');
+    setTimeout(() => document.body.classList.remove('mood-theme-transition'), 850);
+
+    // Set body's bg and variable theme colors
+    document.body.style.background = theme.bodyBg;
+    for (const key of Object.keys(FALLBACK_THEME)) {
+      if (key.startsWith('--')) {
+        document.documentElement.style.setProperty(key, theme[key]);
+      }
+    }
+    // Animate font family on root
+    document.body.style.fontFamily = theme.fontFamily;
+
+    // Dynamically load playful web font
+    const familyToLoad = (theme.fontFamily?.split(',')[0] || '').replace(/'/g, '').trim();
+    loadWebFont(familyToLoad);
+
+    // Also animate all .card, .navbar, .logo etc. on mood change for smooth theme
+    const themables = document.querySelectorAll('.card, .navbar, .logo, .theme-bar, .main-content, .mood-selector-card, .meme-bar, .joke-bar, .meme-card, .gif-card');
+    themables.forEach(el => {
+      el.classList.add('mood-theme-transition');
+      setTimeout(() => el.classList.remove('mood-theme-transition'), 850);
+    });
+
+    prevMood.current = selectedMood;
+  }, [selectedMood]);
 
   const handleMoodChange = useCallback((moodKey) => {
     setSelectedMood(moodKey);
     // TODO: Use this to trigger mood-specific content fetch
   }, []);
 
+  // Helper for showing pretty mood name for nav
+  const moodLabel = selectedMood ? (
+    {
+      happy: "Happy 😄",
+      sad: "Sad 😢",
+      excited: "Excited 🤩",
+      calm: "Calm 🧘",
+      energetic: "Energetic ⚡",
+      angry: "Angry 😡",
+      chill: "Chill 🧊",
+    }[selectedMood] || selectedMood
+  ) : "Default";
+
   return (
-    <div className="app">
+    <div className="app" data-mood={selectedMood || "default"}>
       {/* Navbar at the top */}
       <nav className="navbar">
         <div className="container">
           <div className="logo">
             <span className="logo-symbol">*</span> MoodLift
           </div>
-          <div className="theme-bar">
-            {/* Theming bar placeholder; in future, place theme toggles or indicators here */}
+          <div className="theme-bar" title={selectedMood ? `Current Mood: ${moodLabel}` : "Theme Bar"}>
             <span role="img" aria-label="theme">🎨</span>
-            Theme Bar
+            {selectedMood ? <>Mood: <b style={{ marginLeft: 3 }}>{moodLabel}</b></> : "Theme Bar"}
           </div>
         </div>
       </nav>
@@ -37,7 +181,6 @@ function App() {
       {/* Main content area */}
       <main className="main-content">
         <div className="container flex-col gap-lg">
-
           {/* Mood Selector Section */}
           <section className="card mood-selector-card">
             <h2>Mood Selector</h2>
