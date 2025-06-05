@@ -364,6 +364,28 @@ function App() {
         {
           (() => {
             const ProfilePage = require("./components/ProfilePage").default;
+
+            // Handler for profile field changes (username, dob, dailyMoodStatus)
+            const handleProfileChange = ({ username, dateOfBirth, dailyMoodStatus }) => {
+              setProfile(prev => ({
+                ...prev,
+                username: username !== undefined ? username : prev.username,
+                dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : prev.dateOfBirth
+              }));
+              // dailyMoodStatus is not part of profile object in App.js, but can be used to set selectedMood
+              if (dailyMoodStatus !== undefined) {
+                setSelectedMood(dailyMoodStatus);
+              }
+            };
+
+            // Handler for adding a diary entry from profile
+            const handleAddDiaryEntry = ({ date, mood, text }) => {
+              setDiaries(prev => [
+                { date, mood, text },
+                ...prev
+              ]);
+            };
+
             return (
               <ProfilePage
                 mood={selectedMood}
@@ -371,6 +393,8 @@ function App() {
                 dateOfBirth={profile.dateOfBirth}
                 dailyMoodStatus={selectedMood}
                 diaries={diaries}
+                onProfileChange={handleProfileChange}
+                onAddDiaryEntry={handleAddDiaryEntry}
               />
             );
           })()
