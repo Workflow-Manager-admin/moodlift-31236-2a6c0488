@@ -118,6 +118,8 @@ function loadWebFont(family, weights = ['400', '700']) {
   Main App component handles page-level navigation between:
     - Home content ("main")
     - Write Your Own Diary ("diary")
+    - Profile ("profile")
+    - Settings ("settings")
   and passes state and moods as needed.
 */
 // PUBLIC_INTERFACE
@@ -128,7 +130,7 @@ function App() {
   const [joke, setJoke] = useState(null); // joke object
   const [gif, setGif] = useState(null); // gif object
   const [quote, setQuote] = useState(null); // quote object
-  // Updated: now supports "main" | "diary" | "profile" | "settings"
+  // Now supports "main" | "diary" | "profile" | "settings"
   const [currentPage, setCurrentPage] = useState("main");
   const prevMood = useRef(null);
 
@@ -257,7 +259,7 @@ function App() {
   // Callback for navigation change from bottom nav bar
   // PUBLIC_INTERFACE
   const handleSelectNav = (navKey) => {
-    // Navigation handler fully supports profile, main (home), diary, and settings
+    // Navigation handler supports profile, main (home), diary, and settings
     switch (navKey) {
       case "profile":
         setCurrentPage("profile");
@@ -282,9 +284,9 @@ function App() {
   const handleDiaryBack = () => setCurrentPage("main");
 
   /**
-   * Conditional rendering for main, diary, and profile pages:
-   * - When "profile" is selected in the BottomNavBar, ProfilePage is shown and receives 'mood' as prop for theming.
-   * - "main" and "diary" behave as before.
+   * Conditional rendering for main, diary, profile, and settings pages:
+   * - "profile" gets ProfilePage as before.
+   * - New: "settings" shows SettingsPage with current mood for theming.
    */
   let pageContent = null;
   if (currentPage === "main") {
@@ -344,6 +346,8 @@ function App() {
         }
       </React.Suspense>
     );
+  } else if (currentPage === "settings") {
+    pageContent = <SettingsPage mood={selectedMood} />;
   }
 
   return (
@@ -370,6 +374,8 @@ function App() {
             ? "write"
             : currentPage === "profile"
             ? "profile"
+            : currentPage === "settings"
+            ? "settings"
             : "home"
         }
         onSelectNav={handleSelectNav}
