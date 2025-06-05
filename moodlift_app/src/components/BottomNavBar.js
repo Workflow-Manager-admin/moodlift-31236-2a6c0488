@@ -80,7 +80,12 @@ function BottomNavBar({ selectedNav, onSelectNav }) {
           onClick={() => {
             // Always call onSelectNav so App.js can update page state accordingly.
             // This ensures DiaryPage renders any time "Write Diary" is selected.
-            if (onSelectNav) onSelectNav(item.key);
+            // Route 'profile' nav key specifically for Profile navigation.
+            if (item.key === "profile") {
+              onSelectNav && onSelectNav("profile");
+            } else if (onSelectNav) {
+              onSelectNav(item.key);
+            }
           }}
           type="button"
         >
