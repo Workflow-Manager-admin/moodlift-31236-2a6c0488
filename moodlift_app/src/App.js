@@ -252,10 +252,13 @@ function App() {
   ) : "Default";
 
   // Callback for navigation change from bottom nav bar
+  // PUBLIC_INTERFACE
   const handleSelectNav = (navKey) => {
+    // Always switch navigation state based on BottomNavBar selection
     if (navKey === "write") setCurrentPage("diary");
     else if (navKey === "home") setCurrentPage("main");
     // ...extend for future navs like profile/settings
+    // Unknown navKeys are safely ignored
   };
 
   // Handler after diary entry save (stub - can be hooked to an API)
