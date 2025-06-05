@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 import MoodSelector from './components/MoodSelector';
 import './components/MoodSelector.css';
+import MemeJokeCard from './components/MemeJokeCard';
 
 const MOOD_THEMES = {
   happy: {
