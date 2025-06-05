@@ -322,7 +322,12 @@ function App() {
         </main>
       )}
       {currentPage === "diary" && (
-        <DiaryPage mood={selectedMood} onSave={handleDiarySave} onBack={handleDiaryBack} />
+        <DiaryPage
+          // Always pass the real-time mood to DiaryPage
+          mood={selectedMood}
+          onSave={handleDiarySave}
+          onBack={handleDiaryBack}
+        />
       )}
       {/* Optionally, add a fixed theming bar or footer here in the future */}
       <BottomNavBar
