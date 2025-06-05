@@ -112,7 +112,38 @@ function loadWebFont(family, weights = ['400', '700']) {
 function App() {
   // Track the selected mood for the session (future: persist or send to backend if needed)
   const [selectedMood, setSelectedMood] = useState(null);
+  const [meme, setMeme] = useState(null); // meme object
+  const [joke, setJoke] = useState(null); // joke object
   const prevMood = useRef(null);
+
+  // --- MOCK APIs (stubbed) ---
+  // In production, replace with real fetches (and error handling)
+  function fetchMemeForMood(mood) {
+    // For demo: static map
+    const moodMemes = {
+      happy:   { url: "https://i.imgflip.com/30b1gx.jpg", caption: "Stay happy, stay awesome!" },
+      sad:     { url: "https://i.imgflip.com/43a45p.jpg", caption: "When coffee runs out on a sad day." },
+      excited: { url: "https://i.imgflip.com/39t1o.jpg", caption: "Excited? Let's roll!" },
+      calm:    { url: "https://i.imgflip.com/4t0m5.jpg", caption: "Keep calm and carry on." },
+      energetic: { url: "https://i.imgflip.com/26am.jpg", caption: "Energy level: Over 9000!" },
+      angry:   { url: "https://i.imgflip.com/27w2.jpg", caption: "Take a deep breath... rawr!" },
+      chill:   { url: "https://i.imgflip.com/1ur9b0.jpg", caption: "Just chillin' 😎" },
+    };
+    return Promise.resolve(moodMemes[mood] || { url: "https://i.imgflip.com/2fm6x.jpg", caption: "Any mood is meme mood!" });
+  }
+  function fetchJokeForMood(mood) {
+    // For demo: static map
+    const moodJokes = {
+      happy:   { setup: "Why did the banana go to the party?", punchline: "Because it was a-peeling!" },
+      sad:     { setup: "Why don't skeletons fight each other?", punchline: "They don't have the guts." },
+      excited: { setup: "Why did the math book look excited?", punchline: "It had too many problems to handle!" },
+      calm:    { setup: "What do you call a calm canine?", punchline: "A chi-ll dog." },
+      energetic: { setup: "Why did the computer get so energetic?", punchline: "Because it had a byte to eat!" },
+      angry:   { setup: "What do you call a grumpy cat?", punchline: "A sourpuss." },
+      chill:   { setup: "How does a penguin build its house?", punchline: "Igloos it together." },
+    };
+    return Promise.resolve(moodJokes[mood] || { setup: "Feeling moody?", punchline: "Laughter is the best medicine!" });
+  }
 
   // Side effect: update CSS variables and font when selectedMood changes
   useEffect(() => {
