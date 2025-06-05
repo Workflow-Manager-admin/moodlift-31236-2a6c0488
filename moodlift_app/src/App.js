@@ -334,14 +334,31 @@ function App() {
       />
     );
   } else if (currentPage === "profile") {
-    // Use Suspense for ProfilePage for illustration (assuming it could eventually be lazily loaded)
+    // Place to inject user & diary demo data (would be replaced with backend user state management)
+    const demoUser = {
+      username: "Alex Rivers",
+      dateOfBirth: "1995-03-18",
+      dailyMoodStatus: selectedMood || "happy",
+      diaries: [
+        { date: "2023-11-28", mood: "happy", text: "Had a lovely walk. Birds were singing 🐦!" },
+        { date: "2024-02-05", mood: "sad", text: "A bit down but watched memes to perk up." },
+        { date: "2024-03-18", mood: "excited", text: "My birthday today! Went out with friends 🎉" }
+      ]
+    };
     pageContent = (
       <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
         {
           (() => {
             const ProfilePage = require("./components/ProfilePage").default;
-            // Pass selectedMood as 'mood' prop for dynamic theming
-            return <ProfilePage mood={selectedMood} />;
+            return (
+              <ProfilePage
+                mood={selectedMood}
+                username={demoUser.username}
+                dateOfBirth={demoUser.dateOfBirth}
+                dailyMoodStatus={demoUser.dailyMoodStatus}
+                diaries={demoUser.diaries}
+              />
+            );
           })()
         }
       </React.Suspense>
