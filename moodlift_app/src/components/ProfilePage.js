@@ -10,7 +10,13 @@ import React from "react";
  *   - diaries: array of entries: [{date, mood, text}]
  */
 // PUBLIC_INTERFACE
-function ProfilePage({ mood, username = "John Doe", dateOfBirth = "1998-02-28", dailyMoodStatus, diaries = [] }) {
+function ProfilePage({
+  mood,
+  username = "John Doe",
+  dateOfBirth = "1998-02-28",
+  dailyMoodStatus,
+  diaries = []
+}) {
   // Mood visual meta
   const moodMeta = {
     happy:     { emoji: "😄", vibe: "Ready to smile!" },
