@@ -2,25 +2,27 @@ import React, { useState } from "react";
 import "./SettingsPage.css";
 
 /**
- * SettingsPage – Vibrant, playful, mood-adaptive settings page.
- * Now includes color pickers for customizing primary, secondary, and accent theme colors.
+ * SettingsPage – Vibrant, playful, mood-adaptive settings page with live color tweak support.
  *
  * Props:
  *   mood (string): current selected mood, for dynamic theming
+ *   onThemeChange (function): optional, pass up {primary, secondary, accent}
  */
- 
-// Utility: gets CSS variable value from root or fallback.
+
+// Utility to get current root-level CSS variable
 function getCssVar(varName, fallback = "#ffffff") {
-  return getComputedStyle(document.documentElement).getPropertyValue(varName) || fallback;
+  // getComputedStyle may return " " if not yet set
+  const val = getComputedStyle(document.documentElement).getPropertyValue(varName);
+  return val && val.trim() !== "" ? val.trim() : fallback;
 }
 
-// Utility: set CSS var and handle transitions on the fly
+// Utility: set a CSS variable on root
 function setCssVar(varName, value) {
   document.documentElement.style.setProperty(varName, value);
 }
 
 // PUBLIC_INTERFACE
-function SettingsPage({ mood }) {
+function SettingsPage({ mood, onThemeChange }) {
   // Mood details for emoji header or highlight
   const moodMeta = {
     happy:     { emoji: "😄", header: "Sunny Settings" },
@@ -34,41 +36,82 @@ function SettingsPage({ mood }) {
   };
   const mm = moodMeta[mood] || moodMeta.default;
 
-  // Load initial color states from CSS vars
-  const [primaryColor, setPrimaryColor] = useState(
-    getCssVar("--primary", "#FFB347").trim() || "#FFB347"
-  );
-  const [secondaryColor, setSecondaryColor] = useState(
-    getCssVar("--secondary", "#6EC6FF").trim() || "#6EC6FF"
-  );
-  const [accentColor, setAccentColor] = useState(
-    getCssVar("--accent", "#FF69B4").trim() || "#FF69B4"
-  );
+  // Initial color state from CSS variables
+  const [primaryColor, setPrimaryColor] = useState(getCssVar("--primary", "#FFB347"));
+  const [secondaryColor, setSecondaryColor] = useState(getCssVar("--secondary", "#6EC6FF"));
+  const [accentColor, setAccentColor] = useState(getCssVar("--accent", "#FF69B4"));
 
-  // Change handlers that update CSS vars and state for immediate feedback
-  function handleColorChange(e, colorVar, setColor) {
-    setColor(e.target.value);
-    // Animate transition
+  // Update color and CSS variable, propagate up if prop exists
+  function handleColorChange(colorVar, setColor, newColor) {
+    setColor(newColor);
+    setCssVar(colorVar, newColor);
+    // Animate the app transition
     document.body.classList.add("mood-theme-transition");
     setTimeout(() => document.body.classList.remove("mood-theme-transition"), 700);
-    setCssVar(colorVar, e.target.value);
+    if (onThemeChange) {
+      // Let parent App.js know about the color changes if needed
+      onThemeChange({
+        primary: colorVar === "--primary" ? newColor : primaryColor,
+        secondary: colorVar === "--secondary" ? newColor : secondaryColor,
+        accent: colorVar === "--accent" ? newColor : accentColor,
+      });
+    }
   }
 
-  // Optionally: reset to app default colors
+  // Reset colors to app defaults
   function handleResetColors() {
     const defaults = {
-      primary: "#FFB347",
-      secondary: "#6EC6FF",
-      accent: "#FF69B4",
+      "--primary": "#FFB347",
+      "--secondary": "#6EC6FF",
+      "--accent": "#FF69B4",
     };
-    setPrimaryColor(defaults.primary);
-    setSecondaryColor(defaults.secondary);
-    setAccentColor(defaults.accent);
-    setCssVar("--primary", defaults.primary);
-    setCssVar("--secondary", defaults.secondary);
-    setCssVar("--accent", defaults.accent);
+    setPrimaryColor(defaults["--primary"]);
+    setSecondaryColor(defaults["--secondary"]);
+    setAccentColor(defaults["--accent"]);
+    Object.keys(defaults).forEach(k => setCssVar(k, defaults[k]));
     document.body.classList.add("mood-theme-transition");
     setTimeout(() => document.body.classList.remove("mood-theme-transition"), 700);
+    if (onThemeChange) {
+      onThemeChange({
+        primary: defaults["--primary"],
+        secondary: defaults["--secondary"],
+        accent: defaults["--accent"],
+      });
+    }
+  }
+
+  // Swatch palette suggestions
+  const swatchOptions = [
+    "#FFB347", "#FFD700", "#FFE066", "#FF65A3", "#7AF9FF", "#6EC6FF", "#FF69B4",
+    "#ce68fc", "#FFD166", "#53B2A9", "#8DE9C3", "#A0C3D2", "#FF6B06", "#300000"
+  ];
+
+  function renderColorSwatches(current, setColor, cssVar) {
+    return (
+      <div style={{ display: "flex", gap: 5, marginLeft: 8 }}>
+        {swatchOptions.map((sw, i) => (
+          <button
+            key={sw + i}
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: 8,
+              border: current === sw ? "2.1px solid #222" : "1.2px solid #999",
+              background: sw,
+              cursor: "pointer",
+              outline: current === sw ? "2.5px solid var(--accent)" : "none",
+              marginRight: 1,
+              boxShadow: current === sw ? "0 1.5px 9px #0002" : "none"
+            }}
+            aria-label={"Select color " + sw}
+            tabIndex={0}
+            type="button"
+            onClick={() => handleColorChange(cssVar, setColor, sw)}
+            title={sw}
+          />
+        ))}
+      </div>
+    );
   }
 
   return (
@@ -90,11 +133,13 @@ function SettingsPage({ mood }) {
                 id="color-primary"
                 value={primaryColor}
                 aria-label="Pick primary color"
-                onChange={e => handleColorChange(e, "--primary", setPrimaryColor)}
+                onChange={e => handleColorChange("--primary", setPrimaryColor, e.target.value)}
                 style={{
                   width: 42, height: 31, borderRadius: 8, border: "2.5px solid var(--primary)", background: "#fff"
                 }}
               />
+              {/* Swatches */}
+              {renderColorSwatches(primaryColor, setPrimaryColor, "--primary")}
               <span style={{ marginLeft: 10, color: primaryColor, fontWeight: 600 }}>{primaryColor}</span>
             </div>
             <div className="settings-option-row">
@@ -106,11 +151,12 @@ function SettingsPage({ mood }) {
                 id="color-secondary"
                 value={secondaryColor}
                 aria-label="Pick secondary color"
-                onChange={e => handleColorChange(e, "--secondary", setSecondaryColor)}
+                onChange={e => handleColorChange("--secondary", setSecondaryColor, e.target.value)}
                 style={{
                   width: 42, height: 31, borderRadius: 8, border: "2.5px solid var(--secondary)", background: "#fff"
                 }}
               />
+              {renderColorSwatches(secondaryColor, setSecondaryColor, "--secondary")}
               <span style={{ marginLeft: 10, color: secondaryColor, fontWeight: 600 }}>{secondaryColor}</span>
             </div>
             <div className="settings-option-row">
@@ -122,11 +168,12 @@ function SettingsPage({ mood }) {
                 id="color-accent"
                 value={accentColor}
                 aria-label="Pick accent color"
-                onChange={e => handleColorChange(e, "--accent", setAccentColor)}
+                onChange={e => handleColorChange("--accent", setAccentColor, e.target.value)}
                 style={{
                   width: 42, height: 31, borderRadius: 8, border: "2.5px solid var(--accent)", background: "#fff"
                 }}
               />
+              {renderColorSwatches(accentColor, setAccentColor, "--accent")}
               <span style={{ marginLeft: 10, color: accentColor, fontWeight: 600 }}>{accentColor}</span>
             </div>
             <div className="settings-option-row" style={{ justifyContent: "flex-end" }}>
