@@ -378,54 +378,140 @@ function ProfilePage({
           </div>
         )}
         <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
-          {diaries && diaries.map((entry, idx) => {
-            const entryDate = new Date(entry.date);
-            const prettyDate = isNaN(entryDate)
-              ? entry.date
-              : entryDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-            return (
-              <div
-                key={idx}
-                style={{
-                  background: "rgba(255,255,255,0.09)",
-                  borderLeft: `5.5px solid var(--primary)`,
-                  borderRadius: 10,
-                  padding: "8px 14px 8px 13px",
-                  color: "var(--text-color, #fff)",
-                  boxShadow: "0 1.8px 7px rgba(50,40,60,0.09)",
-                  fontSize: "1.04em",
-                  position: "relative"
-                }}
-              >
-                <span style={{
-                  fontWeight: 600,
-                  color: "var(--accent)",
-                  fontSize: "1.01em",
-                  marginRight: 7,
-                  opacity: 0.95,
-                  letterSpacing: 0.01
-                }}>
-                  {moodLabelString(entry.mood)}
-                </span>
-                <span style={{
-                  color: "var(--text-secondary, #ffe9)",
-                  fontSize: "0.96em",
-                  marginLeft: 0,
-                  fontWeight: 400
-                }}>
-                  {prettyDate}
-                </span>
-                <div style={{
-                  marginTop: 3,
-                  whiteSpace: "pre-line",
-                  fontWeight: 400,
-                  fontSize: "1em"
-                }}>
-                  {entry.text}
-                </div>
-              </div>
-            );
-          })}
+          {/* Display diary entries in reverse chronological order, most recent first */}
+          {diaries &&
+            [...diaries]
+              .sort((a, b) => {
+                // Sort descending by date; ISO date ok for slice(0,10)-format
+                return new Date(b.date) - new Date(a.date);
+              })
+              .map((entry, idx) => {
+                const entryDate = new Date(entry.date);
+                const prettyDate = isNaN(entryDate)
+                  ? entry.date
+                  : entryDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+
+                // Mood-based theme (mood color highlight)
+                const moodBgColors = {
+                  happy:   "linear-gradient(97deg, #fff7b6cc 0%, #ffe066a8 100%)",
+                  sad:     "linear-gradient(89deg, #b9cbe7aa 0%, #dce9f6b9 100%)",
+                  excited: "linear-gradient(91deg, #fed3f59f 0%, #fff74095 100%)",
+                  calm:    "linear-gradient(86deg, #d0f6eef7 0%, #78d6c69f 100%)",
+                  energetic: "linear-gradient(91deg, #ffe5b399 0%, #ff6b069d 100%)",
+                  angry:   "linear-gradient(91deg, #ffd4d4a6 0%, #ff393975 100%)",
+                  chill:   "linear-gradient(87deg, #e4f9efba 0%, #acd8aade 100%)"
+                };
+                const borderColorMap = {
+                  happy:     "#FFB800",
+                  sad:       "#5A80BA",
+                  excited:   "#FF65A3",
+                  calm:      "#53B2A9",
+                  energetic: "#FF6B06",
+                  angry:     "#FF3939",
+                  chill:     "#8DE9C3"
+                };
+                const bg =
+                  moodBgColors[entry.mood] ||
+                  "linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(247,247,247,0.15) 100%)";
+                const borderClr = borderColorMap[entry.mood] || "var(--primary)";
+
+                // Primary highlight if most recent (first after sort)
+                const isLatest = idx === 0;
+
+                return (
+                  <div
+                    key={idx + "-" + entry.date + "-" + (entry.mood || "")}
+                    style={{
+                      background: bg,
+                      borderLeft: isLatest
+                        ? `6px solid ${borderClr}`
+                        : `4px solid ${borderClr}`,
+                      borderRadius: 12,
+                      padding: isLatest
+                        ? "11px 18px 11px 15px"
+                        : "9px 13px 9px 11px",
+                      color: "var(--text-color, #fff)",
+                      boxShadow: isLatest
+                        ? "0 4px 19px rgba(50,78,160,0.13), 0 0.5px 6px #ffe06644"
+                        : "0 1.5px 7px rgba(55,40,60,0.08)",
+                      fontSize: isLatest ? "1.085em" : "1.04em",
+                      position: "relative",
+                      borderTop: isLatest ? "2px solid var(--accent)" : undefined,
+                      transition: "background 0.5s, border-color 0.5s, box-shadow 0.45s"
+                    }}
+                    data-mood={entry.mood}
+                  >
+                    {/* Mood and date "chip" */}
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        display: "inline-block",
+                        color: borderClr,
+                        background: "rgba(255,255,255,0.10)",
+                        border: `1.2px solid ${borderClr}`,
+                        borderRadius: 8,
+                        fontSize: "1.02em",
+                        marginRight: 10,
+                        padding: "2px 11px 2px 9px",
+                        opacity: 0.98,
+                        verticalAlign: "middle",
+                        letterSpacing: 0.01,
+                        boxShadow: "0 1.5px 5px 0 rgba(80,80,140,0.11)",
+                        transition: "color 0.37s, background 0.42s"
+                      }}
+                    >
+                      {moodLabelString(entry.mood)}
+                    </span>
+                    <span
+                      style={{
+                        color: "var(--text-secondary, #ffe9)",
+                        background: "rgba(220,220,255,0.09)",
+                        padding: "2px 7px",
+                        borderRadius: 6,
+                        fontSize: "0.97em",
+                        fontWeight: 500,
+                        marginLeft: 0,
+                        marginRight: 8,
+                        opacity: 0.87,
+                        verticalAlign: "middle"
+                      }}
+                    >
+                      {prettyDate}
+                    </span>
+                    {isLatest && (
+                      <span
+                        style={{
+                          color: "var(--primary)",
+                          background: "rgba(255,255,180,0.13)",
+                          fontWeight: 800,
+                          borderRadius: "8px",
+                          fontSize: "0.99em",
+                          padding: "2px 10px",
+                          marginLeft: 7,
+                          opacity: 0.92,
+                          letterSpacing: "0.01em",
+                          verticalAlign: "middle"
+                        }}
+                        aria-label="Most recent entry"
+                        title="Most recent"
+                      >
+                        🆕 Latest
+                      </span>
+                    )}
+                    <div
+                      style={{
+                        marginTop: 6,
+                        whiteSpace: "pre-line",
+                        fontWeight: 400,
+                        fontSize: "1em",
+                        color: "var(--text-color, #fff)"
+                      }}
+                    >
+                      {entry.text}
+                    </div>
+                  </div>
+                );
+              })}
         </div>
       </section>
     </div>
