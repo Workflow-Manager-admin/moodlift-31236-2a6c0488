@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
+import MoodSelector from './components/MoodSelector';
+import './components/MoodSelector.css';
 
 // PUBLIC_INTERFACE
 function App() {
+  // Track the selected mood for the session (future: persist or send to backend if needed)
+  const [selectedMood, setSelectedMood] = useState(null);
+
+  // Placeholder: In the future, use this hook for AI/auto detection of mood
+  // const detectAIMood = useCallback(() => {
+  //   // TODO: Implement Kavia AI-based mood detection here
+  // }, []);
+
+  const handleMoodChange = useCallback((moodKey) => {
+    setSelectedMood(moodKey);
+    // TODO: Use this to trigger mood-specific content fetch
+  }, []);
+
   return (
     <div className="app">
       {/* Navbar at the top */}
@@ -25,9 +40,12 @@ function App() {
 
           {/* Mood Selector Section */}
           <section className="card mood-selector-card">
-            {/* TODO: Replace with Mood Selector component */}
             <h2>Mood Selector</h2>
-            <div className="placeholder-text">[Mood selection controls go here]</div>
+            <MoodSelector
+              selectedMood={selectedMood}
+              onMoodChange={handleMoodChange}
+              // In the future, pass AI/auto detection handler here
+            />
           </section>
 
           {/* --- Meme Bar Section --- */}
