@@ -132,12 +132,42 @@ function SettingsPage({ mood, onThemeColorChange }) {
   // Actual rendering of settings options for three theme colors
   return (
     <div
-      className="container flex-col gap-lg settings-vibrant-bg"
-      style={{ marginTop: 90, marginBottom: 85 }}
+      className="settings-fullscreen flex-col gap-lg settings-vibrant-bg"
+      style={{
+        minHeight: "100vh",
+        minWidth: "100vw",
+        width: "100vw",
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 0,
+        margin: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "auto"
+      }}
       role="main"
       aria-label="Theme Settings"
     >
-      <section className="card settings-card-bounce">
+      <section className="card settings-card-bounce"
+        style={{
+          background: "linear-gradient(117deg, rgba(255,255,255,0.13) 50%, var(--base-light, #FFFDE9) 130%)",
+          borderLeft: "10px solid var(--accent)",
+          boxShadow: "0 4px 38px 0 var(--primary), 0 1.5px 24px var(--accent, #FF69B4, 0.09), 0 4px 23px 0 var(--accent)",
+          minWidth: "clamp(320px, 90vw, 650px)",
+          maxWidth: "96vw",
+          width: "100%",
+          margin: "0 auto",
+          marginTop: 0,
+          marginBottom: 0,
+          position: "relative",
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
         <div className="settings-header fancyify">
           <span className="settings-emoji" aria-hidden="true">
             {mm.emoji}
