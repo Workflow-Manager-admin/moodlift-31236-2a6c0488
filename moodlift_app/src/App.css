@@ -137,36 +137,44 @@ body {
 
 /* Center logo in grid for cleaner arrangement */
 .logo {
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #fff;
+  font-size: 1.42rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #fff !important;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   justify-self: start;
   margin: 0;
-  /* Add a font-size bounce for happy/excited */
-  transition: font-size 0.65s cubic-bezier(.61,1.51,.25,.93), font-family 0.75s cubic-bezier(.55,1.5,.18,.87);
+  /* Font bounce for playful mood */
+  transition:
+    font-size 0.65s cubic-bezier(.61,1.51,.25,.93),
+    font-family 0.75s cubic-bezier(.55,1.5,.18,.87),
+    text-shadow 0.4s cubic-bezier(.19,1.2,.51,1.01);
+  position: relative;
+  z-index: 2;
 }
-[data-mood="happy"] .logo, [data-mood="excited"] .logo {
-  font-size: 1.53rem;
-}
-[data-mood="sad"] .logo, [data-mood="calm"] .logo, [data-mood="chill"] .logo {
-  font-size: 1.38rem;
-}
-
 .logo-symbol {
-  color: #fff;
-  font-size: 1.5em;
-  text-shadow: 0 1px 4px rgba(40,55,120,0.23);
-  /* gentle wiggle for excited/happy */
-  animation: logo-bounce 2.16s cubic-bezier(.45,1.51,.51,1.06) infinite alternate;
+  color: #ffe167;
+  font-size: 1.63em;
+  text-shadow: 0 1px 8px rgba(255,216,120,.59), 0 0px 12px var(--accent, #FF69B4cc);
+  /* Sparkle & bounce */
+  animation:
+    logo-bounce 2.16s cubic-bezier(.45,1.51,.51,1.06) infinite alternate,
+    star-sparkle 1.77s cubic-bezier(.63,1.51,.65,1.06) infinite alternate;
+  filter: drop-shadow(0 0 6px var(--accent, #FF69B4bb));
+  margin-right: 2px;
 }
 @keyframes logo-bounce {
-  0%, 100% { transform: translateY(0);}
-  30% { transform: translateY(-2.5px);}
-  60% { transform: translateY(2.5px);}
+  0%, 100% { transform: translateY(0) rotate(-4deg);}
+  30% { transform: translateY(-4px) rotate(10deg);}
+  60% { transform: translateY(3.5px) rotate(-6deg);}
+}
+@keyframes star-sparkle {
+  0% { filter: drop-shadow(0 0 1px #fffcc1); opacity: 0.83; }
+  33% { filter: drop-shadow(0 0 8px #ffe3c1); opacity: 1;}
+  85% { filter: drop-shadow(0 0 15px #ffb347cc); opacity: 0.93;}
+  100% { filter: drop-shadow(0 0 4px #ffe8b1bb); opacity: 0.92;}
 }
 
 /* Theme bar placed at end of grid layout */
