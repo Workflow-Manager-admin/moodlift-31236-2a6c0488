@@ -277,15 +277,39 @@ function App() {
     }
   };
 
-  // Handler after diary entry save (stub - can be hooked to an API)
+  // User Profile & Diary State Management
+  // PUBLIC_INTERFACE
+  const [profile, setProfile] = useState({
+    username: "Alex Rivers",
+    dateOfBirth: "1995-03-18"
+  });
+
+  // Diaries are stored as array: {date, mood, text}
+  const [diaries, setDiaries] = useState([
+    { date: "2023-11-28", mood: "happy", text: "Had a lovely walk. Birds were singing 🐦!" },
+    { date: "2024-02-05", mood: "sad", text: "A bit down but watched memes to perk up." },
+    { date: "2024-03-18", mood: "excited", text: "My birthday today! Went out with friends 🎉" }
+  ]);
+
+  // Handler after diary entry save: add to diary state (mood, text, date=today), then return to main
+  // PUBLIC_INTERFACE
   const handleDiarySave = ({ mood, text }) => {
+    // Add diary with today date, user current mood
+    const todayIso = new Date().toISOString().slice(0, 10);
+    setDiaries(prev => [
+      { date: todayIso, mood: mood, text: text },
+      ...prev
+    ]);
     setCurrentPage("main");
   };
   const handleDiaryBack = () => setCurrentPage("main");
 
+  // Set username and dob — stubs to later connect to settings (not requested in this task, but for completeness)
+  // const handleProfileEdit = ({ username, dateOfBirth }) => setProfile({ username, dateOfBirth });
+
   /**
    * Conditional rendering for main, diary, profile, and settings pages:
-   * - "profile" gets ProfilePage as before.
+   * - "profile" gets ProfilePage as before, but uses state values.
    * - New: "settings" shows SettingsPage with current mood for theming.
    */
   let pageContent = null;
@@ -334,17 +358,7 @@ function App() {
       />
     );
   } else if (currentPage === "profile") {
-    // Place to inject user & diary demo data (would be replaced with backend user state management)
-    const demoUser = {
-      username: "Alex Rivers",
-      dateOfBirth: "1995-03-18",
-      dailyMoodStatus: selectedMood || "happy",
-      diaries: [
-        { date: "2023-11-28", mood: "happy", text: "Had a lovely walk. Birds were singing 🐦!" },
-        { date: "2024-02-05", mood: "sad", text: "A bit down but watched memes to perk up." },
-        { date: "2024-03-18", mood: "excited", text: "My birthday today! Went out with friends 🎉" }
-      ]
-    };
+    // Compose all profile data from state
     pageContent = (
       <React.Suspense fallback={<div style={{marginTop: 85, color: "#fff", textAlign: "center"}}>Loading Profile...</div>}>
         {
@@ -353,10 +367,10 @@ function App() {
             return (
               <ProfilePage
                 mood={selectedMood}
-                username={demoUser.username}
-                dateOfBirth={demoUser.dateOfBirth}
-                dailyMoodStatus={demoUser.dailyMoodStatus}
-                diaries={demoUser.diaries}
+                username={profile.username}
+                dateOfBirth={profile.dateOfBirth}
+                dailyMoodStatus={selectedMood}
+                diaries={diaries}
               />
             );
           })()
