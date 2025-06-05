@@ -280,16 +280,12 @@ function App() {
   // User Profile & Diary State Management
   // PUBLIC_INTERFACE
   const [profile, setProfile] = useState({
-    username: "Alex Rivers",
-    dateOfBirth: "1995-03-18"
+    username: "",
+    dateOfBirth: ""
   });
 
   // Diaries are stored as array: {date, mood, text}
-  const [diaries, setDiaries] = useState([
-    { date: "2023-11-28", mood: "happy", text: "Had a lovely walk. Birds were singing 🐦!" },
-    { date: "2024-02-05", mood: "sad", text: "A bit down but watched memes to perk up." },
-    { date: "2024-03-18", mood: "excited", text: "My birthday today! Went out with friends 🎉" }
-  ]);
+  const [diaries, setDiaries] = useState([]);
 
   // Handler after diary entry save: add to diary state (mood, text, date=today), then return to main
   // PUBLIC_INTERFACE

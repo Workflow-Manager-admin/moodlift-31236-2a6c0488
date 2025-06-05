@@ -413,7 +413,7 @@ function ProfilePage({
               boxShadow: "0 1px 4px 0 rgba(60,60,120,0.08)",
               transition: "border-color 0.19s, box-shadow 0.19s, color 0.5s, font-family 0.65s"
             }}
-            placeholder="Write something about your day..."
+            placeholder="Write your diary entry for today (e.g. 'Describe your day or mood...')"
             aria-label="Add diary entry"
             value={diaryText}
             onChange={e => setDiaryText(e.target.value)}
