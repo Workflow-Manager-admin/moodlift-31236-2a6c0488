@@ -129,22 +129,36 @@ function SettingsPage({ mood, onThemeColorChange }) {
       </div>
     );
   }
-
   // Actual rendering of settings options for three theme colors
   return (
-    <div className="container flex-col gap-lg settings-vibrant-bg" style={{ marginTop: 90, marginBottom: 85 }}>
+    <div
+      className="container flex-col gap-lg settings-vibrant-bg"
+      style={{ marginTop: 90, marginBottom: 85 }}
+      role="main"
+      aria-label="Theme Settings"
+    >
       <section className="card settings-card-bounce">
         <div className="settings-header fancyify">
-          <span className="settings-emoji">{mm.emoji}</span>
+          <span className="settings-emoji" aria-hidden="true">
+            {mm.emoji}
+          </span>
           <h2 className="settings-title">{mm.header}</h2>
         </div>
-        <div className="settings-main-card">
+        <div className="settings-main-card" aria-label="Vibrant Theme Options">
           <div className="settings-subtitle">Theme Colors</div>
           <div className="settings-options">
-
             {/* Primary Color Picker and Swatches */}
-            <div className="settings-option-row">
-              <label className="settings-label" htmlFor="color-primary" style={{ minWidth: 110 }}>
+            <div
+              className="settings-option-row"
+              tabIndex={0}
+              aria-label="Select the primary color for the theme"
+              role="group"
+            >
+              <label
+                className="settings-label"
+                htmlFor="color-primary"
+                style={{ minWidth: 110 }}
+              >
                 Primary Color:
               </label>
               <input
@@ -152,7 +166,9 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 id="color-primary"
                 value={primaryColor}
                 aria-label="Pick primary color"
-                onChange={e => handleColorChange("--primary", setPrimaryColor, e.target.value)}
+                onChange={e =>
+                  handleColorChange("--primary", setPrimaryColor, e.target.value)
+                }
                 style={{
                   width: 42,
                   height: 31,
@@ -162,12 +178,26 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 }}
               />
               {renderColorSwatches(primaryColor, setPrimaryColor, "--primary")}
-              <span style={{ marginLeft: 10, color: primaryColor, fontWeight: 600 }}>{primaryColor}</span>
+              <span
+                aria-label="Current primary color code"
+                style={{ marginLeft: 10, color: primaryColor, fontWeight: 600 }}
+              >
+                {primaryColor}
+              </span>
             </div>
 
             {/* Secondary Color Picker and Swatches */}
-            <div className="settings-option-row">
-              <label className="settings-label" htmlFor="color-secondary" style={{ minWidth: 110 }}>
+            <div
+              className="settings-option-row"
+              tabIndex={0}
+              aria-label="Select the secondary color for the theme"
+              role="group"
+            >
+              <label
+                className="settings-label"
+                htmlFor="color-secondary"
+                style={{ minWidth: 110 }}
+              >
                 Secondary:
               </label>
               <input
@@ -175,7 +205,9 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 id="color-secondary"
                 value={secondaryColor}
                 aria-label="Pick secondary color"
-                onChange={e => handleColorChange("--secondary", setSecondaryColor, e.target.value)}
+                onChange={e =>
+                  handleColorChange("--secondary", setSecondaryColor, e.target.value)
+                }
                 style={{
                   width: 42,
                   height: 31,
@@ -185,12 +217,26 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 }}
               />
               {renderColorSwatches(secondaryColor, setSecondaryColor, "--secondary")}
-              <span style={{ marginLeft: 10, color: secondaryColor, fontWeight: 600 }}>{secondaryColor}</span>
+              <span
+                aria-label="Current secondary color code"
+                style={{ marginLeft: 10, color: secondaryColor, fontWeight: 600 }}
+              >
+                {secondaryColor}
+              </span>
             </div>
 
             {/* Accent Color Picker and Swatches */}
-            <div className="settings-option-row">
-              <label className="settings-label" htmlFor="color-accent" style={{ minWidth: 110 }}>
+            <div
+              className="settings-option-row"
+              tabIndex={0}
+              aria-label="Select an accent color for highlights"
+              role="group"
+            >
+              <label
+                className="settings-label"
+                htmlFor="color-accent"
+                style={{ minWidth: 110 }}
+              >
                 Accent:
               </label>
               <input
@@ -198,7 +244,9 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 id="color-accent"
                 value={accentColor}
                 aria-label="Pick accent color"
-                onChange={e => handleColorChange("--accent", setAccentColor, e.target.value)}
+                onChange={e =>
+                  handleColorChange("--accent", setAccentColor, e.target.value)
+                }
                 style={{
                   width: 42,
                   height: 31,
@@ -208,11 +256,21 @@ function SettingsPage({ mood, onThemeColorChange }) {
                 }}
               />
               {renderColorSwatches(accentColor, setAccentColor, "--accent")}
-              <span style={{ marginLeft: 10, color: accentColor, fontWeight: 600 }}>{accentColor}</span>
+              <span
+                aria-label="Current accent color code"
+                style={{ marginLeft: 10, color: accentColor, fontWeight: 600 }}
+              >
+                {accentColor}
+              </span>
             </div>
 
             {/* Reset Colors Button */}
-            <div className="settings-option-row" style={{ justifyContent: "flex-end" }}>
+            <div
+              className="settings-option-row"
+              style={{ justifyContent: "flex-end" }}
+              tabIndex={0}
+              aria-label="Reset theme colors to app default"
+            >
               <button
                 type="button"
                 onClick={handleResetColors}
@@ -232,13 +290,15 @@ function SettingsPage({ mood, onThemeColorChange }) {
               >
                 Reset Colors
               </button>
-              <span style={{
-                color: "var(--text-secondary, #fff7)",
-                fontSize: "0.98em",
-                fontStyle: "italic",
-                alignSelf: "center",
-                marginLeft: 6
-              }}>
+              <span
+                style={{
+                  color: "var(--text-secondary, #fff7)",
+                  fontSize: "0.98em",
+                  fontStyle: "italic",
+                  alignSelf: "center",
+                  marginLeft: 6
+                }}
+              >
                 Restore defaults
               </span>
             </div>
