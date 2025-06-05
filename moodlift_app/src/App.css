@@ -40,6 +40,10 @@ body {
   width: 100%;
   z-index: 100;
   min-height: 60px;
+  color: #fff !important;
+}
+.navbar * {
+  color: #fff !important;
 }
 
 .logo {
@@ -149,12 +153,18 @@ body {
   max-width: 370px;
   scroll-snap-align: start;
   flex: 1 0 350px;
+  color: #fff !important;
 }
 
 /* Mood Selector Card */
 .mood-selector-card {
   border-left: 6px solid var(--primary);
   background: linear-gradient(105deg, var(--primary) 2%, rgba(255,255,255,0.14) 80%);
+  color: #fff !important;
+}
+.mood-selector-card *,
+.mood-selector-card h2 {
+  color: #fff !important;
 }
 
 /* Meme Bar Card */
@@ -163,6 +173,11 @@ body {
   background: linear-gradient(98deg, var(--accent) 12%, rgba(255,255,255,0.13) 100%);
   margin-bottom: 18px;
   animation: memePop 0.9s cubic-bezier(.29,.71,.34,1.15);
+  color: #fff !important;
+}
+.meme-bar *,
+.meme-bar h2 {
+  color: #fff !important;
 }
 @keyframes memePop {
   0% { opacity: 0; transform: scale(0.86) translateY(18px);}
@@ -176,6 +191,11 @@ body {
   background: linear-gradient(92deg, var(--primary) 10%, rgba(255,255,255,0.10) 100%);
   margin-bottom: 24px;
   animation: jokeEntry 0.8s cubic-bezier(.31,.68,.31,1.22);
+  color: #fff !important;
+}
+.joke-bar *,
+.joke-bar h2 {
+  color: #fff !important;
 }
 @keyframes jokeEntry {
   0% { opacity: 0; transform: scale(0.93) translateY(28px);}
@@ -187,18 +207,28 @@ body {
 .meme-card {
   border-left: 6px solid var(--accent);
   background: linear-gradient(105deg, rgba(255,255,255,0.16) 30%, var(--accent) 100%);
+  color: #fff !important;
+}
+.meme-card *,
+.meme-card h2 {
+  color: #fff !important;
 }
 
 /* GIF/Quote Card */
 .gif-card {
   border-left: 6px solid var(--secondary);
   background: linear-gradient(105deg, var(--secondary) 2%, rgba(255,255,255,0.17) 80%);
+  color: #fff !important;
+}
+.gif-card *,
+.gif-card h2 {
+  color: #fff !important;
 }
 
 /* Buttons */
 .btn {
   background-color: var(--primary);
-  color: #222;
+  color: #fff;
   border: none;
   border-radius: 6px;
   padding: 9px 22px;
@@ -209,10 +239,11 @@ body {
   margin-left: 16px;
   box-shadow: 0 1.5px 6px rgba(0,0,0,0.09);
   transition: background-color 0.17s, color 0.17s;
+  text-shadow: 0 1px 3px rgba(30,30,60,0.11);
 }
-.btn:hover {
+.btn:hover, .btn:focus {
   background-color: var(--accent);
-  color: white;
+  color: #fff;
 }
 
 .btn-large {
