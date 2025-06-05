@@ -86,7 +86,17 @@ function SettingsPage({ mood, onThemeColorChange }) {
 
   function renderColorSwatches(current, setColor, cssVar) {
     return (
-      <div style={{ display: "flex", gap: 5, marginLeft: 8 }}>
+      <div
+        role="group"
+        aria-label={
+          cssVar === "--primary"
+            ? "Primary color swatches"
+            : cssVar === "--secondary"
+            ? "Secondary color swatches"
+            : "Accent color swatches"
+        }
+        style={{ display: "flex", gap: 5, marginLeft: 8, alignItems: "center" }}
+      >
         {swatchOptions.map((sw, i) => (
           <button
             key={sw + i}
@@ -101,7 +111,15 @@ function SettingsPage({ mood, onThemeColorChange }) {
               marginRight: 1,
               boxShadow: current === sw ? "0 1.5px 9px #0002" : "none"
             }}
-            aria-label={"Select color " + sw}
+            aria-label={
+              (cssVar === "--primary"
+                ? "Primary"
+                : cssVar === "--secondary"
+                ? "Secondary"
+                : "Accent") +
+              " color swatch " +
+              sw
+            }
             tabIndex={0}
             type="button"
             onClick={() => handleColorChange(cssVar, setColor, sw)}
