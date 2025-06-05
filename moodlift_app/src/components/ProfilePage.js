@@ -31,7 +31,7 @@ function ProfilePage({
   const mainMood = (dailyMoodStatus && moodMeta[dailyMoodStatus]) ? dailyMoodStatus : (mood && moodMeta[mood]) ? mood : null;
   const mm = moodMeta[mainMood] || moodMeta[mood] || moodMeta.default;
 
-  // Basic helpers
+  // Helpers
   function getPrettyDate(dobStr) {
     if (!dobStr) return "";
     const d = new Date(dobStr);
@@ -54,7 +54,6 @@ function ProfilePage({
     const d = new Date(dobStr);
     if (isNaN(d)) return false;
     const today = new Date();
-    // ignore year, match MM-DD
     return today.getDate() === d.getDate() && today.getMonth() === d.getMonth();
   }
   function moodLabelString(moodKey) {
@@ -63,9 +62,10 @@ function ProfilePage({
     return `${m.emoji} ${moodKey.charAt(0).toUpperCase()}${moodKey.slice(1)}`;
   }
 
-  // Layout
+  // Theming for main section and cards leverages App.css mood variables via CSS vars.
   return (
     <div className="container flex-col gap-lg" style={{ marginTop: 90, marginBottom: 85 }}>
+      {/* Profile Main Card */}
       <section
         className="card"
         style={{
@@ -101,7 +101,7 @@ function ProfilePage({
         >
           {mm.emoji}
         </div>
-        {/* User + DOB */}
+        {/* User Info + DOB */}
         <div
           style={{
             fontSize: "1.41em",
@@ -153,13 +153,12 @@ function ProfilePage({
             textAlign: "center"
           }}
         >
-          Today's Mood: 
-          {" "}
+          Today's Mood:{" "}
           <b style={{ fontWeight: 700, color: "var(--primary)", letterSpacing: 0.01 }}>
             {dailyMoodStatus ? moodLabelString(dailyMoodStatus) : "Not Set"}
           </b>
         </div>
-        {/* Current vibe line */}
+        {/* Current Vibe Line */}
         <div
           style={{
             color: "var(--text-secondary, #fff8)",
